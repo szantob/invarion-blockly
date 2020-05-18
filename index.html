@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Blockly Demo: Fixed Blockly</title>
+  <script src="./blockly/blockly_compressed.js"></script>
+  <script src="./blockly/blocks_compressed.js"></script>
+  <script src="./blockly/msg/js/en.js"></script>
+  <script src="./blockly/javascript_compressed.js"></script>
+  <script src="./dollDef.js"></script>
+  <!-- <script src="./dollStub.js"></script> -->
+  
+  <style>
+    body {
+      background-color: #fff;
+      font-family: sans-serif;
+    }
+    h1 {
+      font-weight: normal;
+      font-size: 140%;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+
+  <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+	  <category name="Concept Model Blcks">
+		<block type="concept_model">
+		  <field name="NAME">concept model name</field>
+		</block>
+		<block type="vocabulary_node">
+		  <field name="attributeName">attributeName</field>
+		  <field name="description">description</field>
+		</block>
+		<block type="taxonomy_node">
+		  <field name="NAME">name</field>
+		</block>
+		<block type="datamodel_node"></block>
+	  </category>
+	  <category name="Vocabulary">
+		<block type="vocabulary_item">
+		  <field name="name"></field>
+		</block>
+	  </category>
+	  <category name="Taxonomy">
+		<block type="property_item">
+		  <field name="name">name</field>
+		</block>
+	  </category>
+  </xml>
+  <xml xmlns="https://developers.google.com/blockly/xml" id="workspaceBlocks" style="display: none"></xml>
+
+  <script>
+	var toolbox = document.getElementById("toolbox");
+
+	var options = { 
+		toolbox : toolbox, 
+		collapse : true, 
+		comments : true, 
+		disable : true, 
+		maxBlocks : Infinity, 
+		trashcan : true, 
+		horizontalLayout : false, 
+		toolboxPosition : 'start', 
+		css : true, 
+		media : 'https://blockly-demo.appspot.com/static/media/', 
+		rtl : false, 
+		scrollbars : true, 
+		sounds : true, 
+		oneBasedIndex : true
+	};
+
+	/* Inject your workspace */ 
+	var workspace = Blockly.inject('blocklyDiv', options);
+
+	/* Load Workspace Blocks from XML to workspace. Remove all code below if no blocks to load */
+
+	/* TODO: Change workspace blocks XML ID if necessary. Can export workspace blocks XML from Workspace Factory. */
+	var workspaceBlocks = document.getElementById("workspaceBlocks"); 
+
+	/* Load blocks to workspace. */
+	Blockly.Xml.domToWorkspace(workspaceBlocks, workspace);
+  </script>
+
+</body>
+</html>
