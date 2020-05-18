@@ -1,3 +1,23 @@
+var Vocabulary = {
+	itemArray : [
+		{name:"Person",description:"A human being."},
+		{name:"PersonalName",description:"The name of a person."}], //TODO Dynamic
+	getNameList : function(){
+		var list = []
+		for (var i = 0; i < this.itemArray.length; i++) {
+			list.push([this.itemArray[i].name,this.itemArray[i].name.toUpperCase()]);
+		}
+		return list;
+	},
+	getNameList0 : function(){
+		var list = []
+		for (var i = 0; i < this.itemArray.length; i++) {
+			list.push(this.itemArray[i].name.toUpperCase());
+		}
+		return list;
+	}
+}
+
 Blockly.Blocks['vocabulary_node'] = {
   init: function() {
     this.appendDummyInput()
