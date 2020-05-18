@@ -38,21 +38,6 @@
   <xml xmlns="https://developers.google.com/blockly/xml" id="workspaceBlocks" style="display: none"></xml>
 
   <script>
-	var coloursFlyoutCallback = function(workspace) {
-	  // Returns an array of hex colours, e.g. ['#4286f4', '#ef0447']
-	  var colourList = ['#4286f4', '#ef0447'];
-	  var xmlList = [];
-	  if (Blockly.Blocks['colour_picker']) {
-		for (var i = 0; i < colourList.length; i++) {
-		  var blockText = '<block type="colour_picker">' +
-			  '<field name="COLOUR">' + colourList[i] + '</field>' +
-			  '</block>';
-		  var block = Blockly.Xml.textToDom(blockText);
-		  xmlList.push(block);
-		}
-	  }
-	  return xmlList;
-	};
   
 	var toolbox = document.getElementById("toolbox");
 
@@ -74,7 +59,7 @@
 	};
 
 	var workspace = Blockly.inject('blocklyDiv', options);
-	workspace.registerToolboxCategoryCallback('VOCABULARY', coloursFlyoutCallback);
+	workspace.registerToolboxCategoryCallback('VOCABULARY', vocabularyCallback);
 	var workspaceBlocks = document.getElementById("workspaceBlocks"); 
 	Blockly.Xml.domToWorkspace(workspaceBlocks, workspace);
   </script>

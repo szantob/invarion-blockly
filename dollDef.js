@@ -1,3 +1,22 @@
+var Vocabulary = {
+	itemArray : [
+		{name:"Person",description:"A human being."},
+		{name:"PersonalName",description:"The name of a person."}], //TODO Dynamic
+	getNameList : function(){
+		var list = []
+		for (var i = 0; i < this.itemArray.length; i++) {
+			list.push([this.itemArray[i].name,this.itemArray[i].name.toUpperCase()]);
+		}
+		return list;
+	},
+	getNameList0 : function(){
+		var list = []
+		for (var i = 0; i < this.itemArray.length; i++) {
+			list.push(this.itemArray[i].name.toUpperCase());
+		}
+		return list;
+	}
+}
 Blockly.Blocks['concept_model'] = {
   init: function() {
   this.jsonInit({
@@ -126,21 +145,15 @@ Blockly.Blocks['datamodel_node'] = {
 };
 Blockly.Blocks['vocabulary_item'] = {
   init: function() {
-  this.jsonInit({
-	  "type": "vocabulary_item",
-	  "message0": "%1",
-	  "args0": [
-		{
-		  "type": "field_label_serializable",
-		  "name": "name",
-		  "text": ""
-		}
-	  ],
-	  "output": null,
-	  "colour": 20,
-	  "tooltip": "",
-	  "helpUrl": ""
-    });
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown(this.generateOptions), "ITEM");
+    this.setOutput(true, null);
+    this.setColour(20);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  },
+  generateOptions: function() {
+    return Vocabulary.getNameList();
   }
 };
 Blockly.Blocks['property_item'] = {
@@ -170,4 +183,20 @@ Blockly.Blocks['property_item'] = {
 	  "helpUrl": ""
     });
   }
+};
+
+var vocabularyCallback = function(workspace) {
+  var vocabularyList = Vocabulary.getNameList0();
+  var xmlList = [];
+  if (Blockly.Blocks['vocabulary_item']) {
+	for (var i = 0; i < vocabularyList.length; i++) {
+	  var blockText = 
+		'<block type="vocabulary_item">'+
+		'<field name="ITEM">' + vocabularyList[i] + '</field>' +
+		'</block>';
+	  var block = Blockly.Xml.textToDom(blockText);
+	  xmlList.push(block);
+	}
+  }
+  return xmlList;
 };
