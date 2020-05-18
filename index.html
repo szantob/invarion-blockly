@@ -60,6 +60,7 @@
 
 	var workspace = Blockly.inject('blocklyDiv', options);
 	workspace.registerToolboxCategoryCallback('VOCABULARY', vocabularyCallback);
+	workspace.registerButtonCallback('vocabularyNewEntry', vocabularyNewEntryCallback);
 	var workspaceBlocks = document.getElementById("workspaceBlocks"); 
 	Blockly.Xml.domToWorkspace(workspaceBlocks, workspace);
   </script>

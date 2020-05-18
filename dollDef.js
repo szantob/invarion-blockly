@@ -56,31 +56,33 @@ Blockly.Blocks['concept_model'] = {
 };
 Blockly.Blocks['vocabulary_node'] = {
   init: function() {
-  this.jsonInit({
-	  "type": "vocabulary_node",
-	  "message0": "%1 %2 : %3",
-	  "args0": [
-		{
-		  "type": "field_input",
-		  "name": "attributeName",
-		  "text": "attributeName"
-		},
-		{
-		  "type": "input_dummy"
-		},
-		{
-		  "type": "field_input",
-		  "name": "description",
-		  "text": "description"
-		}
-	  ],
-	  "inputsInline": true,
-	  "previousStatement": null,
-	  "nextStatement": null,
-	  "colour": 20,
-	  "tooltip": "",
-	  "helpUrl": ""
-    });
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown(this.generateOptions), "NAME");
+    this.appendDummyInput()
+        .appendField(":")
+        .appendField(new Blockly.FieldTextInput("description"), "description");
+    this.setInputsInline(true);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(20);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  },
+  generateOptions: function() {
+    return Vocabulary.getNameList();
+  }
+};
+Blockly.Blocks['vocabulary_item'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField(new Blockly.FieldDropdown(this.generateOptions), "ITEM");
+    this.setOutput(true, null);
+    this.setColour(20);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  },
+  generateOptions: function() {
+    return Vocabulary.getNameList();
   }
 };
 Blockly.Blocks['taxonomy_node'] = {
@@ -143,19 +145,6 @@ Blockly.Blocks['datamodel_node'] = {
     });
   }
 };
-Blockly.Blocks['vocabulary_item'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown(this.generateOptions), "ITEM");
-    this.setOutput(true, null);
-    this.setColour(20);
- this.setTooltip("");
- this.setHelpUrl("");
-  },
-  generateOptions: function() {
-    return Vocabulary.getNameList();
-  }
-};
 Blockly.Blocks['property_item'] = {
   init: function() {
   this.jsonInit({
@@ -188,6 +177,14 @@ Blockly.Blocks['property_item'] = {
 var vocabularyCallback = function(workspace) {
   var vocabularyList = Vocabulary.getNameList0();
   var xmlList = [];
+  var block = Blockly.Xml.textToDom('<button text="New entry" callbackKey="vocabularyNewEntry"></button>');
+  xmlList.push(block);
+  var block = Blockly.Xml.textToDom(
+	'<block type="vocabulary_node">'+
+		'<field name="NAME">' + vocabularyList[0] + '</field>' +
+	'</block>'
+  );
+  xmlList.push(block);
   if (Blockly.Blocks['vocabulary_item']) {
 	for (var i = 0; i < vocabularyList.length; i++) {
 	  var blockText = 
@@ -199,4 +196,8 @@ var vocabularyCallback = function(workspace) {
 	}
   }
   return xmlList;
+};
+
+var vocabularyNewEntryCallback = function(){
+	return;
 };
