@@ -1,4 +1,4 @@
-var Vocabulary = {
+var Taxonomy = {
 	itemArray : [],
 	getNameListForBlocklyItem : function(){
 		var list = []
@@ -18,56 +18,57 @@ var Vocabulary = {
 		this.itemArray.push(itemName);
 	}
 }
-
-Blockly.Blocks['vocabulary_node'] = {
+Blockly.Blocks['taxonomy_node'] = {
   init: function() {
     this.appendDummyInput()
         .appendField(new Blockly.FieldDropdown(this.generateOptions), "NAME");
+    this.appendStatementInput("children")
+        .setCheck(null);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(120);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  },
+  generateOptions: function() {
+    return Taxonomy.getNameListForBlocklyItem();
+  }
+};
+Blockly.Blocks['taxonomy_item'] = {
+  init: function() {
     this.appendDummyInput()
-        .appendField(":")
-        .appendField(new Blockly.FieldTextInput("description"), "description");
+        .appendField(new Blockly.FieldDropdown(this.generateOptions), "name");
+    this.appendValueInput("NAME")
+        .setCheck(null);
     this.setInputsInline(true);
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
-    this.setColour(20);
+    this.setColour(120);
  this.setTooltip("");
  this.setHelpUrl("");
   },
   generateOptions: function() {
-    return Vocabulary.getNameListForBlocklyItem();
-  }
-};
-Blockly.Blocks['vocabulary_item'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown(this.generateOptions), "ITEM");
-    this.setOutput(true, null);
-    this.setColour(20);
- this.setTooltip("");
- this.setHelpUrl("");
-  },
-  generateOptions: function() {
-    return Vocabulary.getNameListForBlocklyItem();
+    return Taxonomy.getNameListForBlocklyItem();
   }
 };
 
-var vocabularyCallback = function(workspace) {
-  var vocabularyList = Vocabulary.getNameListForBlocklyNode();
+var taxonomyCallback = function(workspace) {
+  var taxonomyList = Taxonomy.getNameListForBlocklyNode();
   var xmlList = [];
-  var block = Blockly.Xml.textToDom('<button text="New entry" callbackKey="vocabularyNewEntry"></button>');
+  var block = Blockly.Xml.textToDom('<button text="New entry" callbackKey="taxonomyNewEntry"></button>');
   xmlList.push(block);
-  if(vocabularyList.length == 0) return xmlList;
+  if(taxonomyList.length == 0) return xmlList;
   var block = Blockly.Xml.textToDom(
-	'<block type="vocabulary_node">'+
-		'<field name="NAME">' + vocabularyList[0] + '</field>' +
+	'<block type="taxonomy_node">'+
+		'<field name="NAME">' + taxonomyList[0] + '</field>' +
 	'</block>'
   );
   xmlList.push(block);
-  if (Blockly.Blocks['vocabulary_item']) {
-	for (var i = 0; i < vocabularyList.length; i++) {
+  if (Blockly.Blocks['taxonomy_item']) {
+	for (var i = 0; i < taxonomyList.length; i++) {
 	  var blockText = 
-		'<block type="vocabulary_item">'+
-		'<field name="ITEM">' + vocabularyList[i] + '</field>' +
+		'<block type="taxonomy_item">'+
+		'<field name="ITEM">' + taxonomyList[i] + '</field>' +
 		'</block>';
 	  var block = Blockly.Xml.textToDom(blockText);
 	  xmlList.push(block);
@@ -75,11 +76,11 @@ var vocabularyCallback = function(workspace) {
   }
   return xmlList;
 };
-var vocabularyNewEntryCallback = function(){
-	var itemName = prompt("New vocabulary entry name:", "Thing");
+var taxonomyNewEntryCallback = function(){
+	var itemName = prompt("New taxonomy entry name:", "Thing");
   if (itemName == null || itemName == "") {
   } else {
-	  Vocabulary.addItem(itemName);
+	  Taxonomy.addItem(itemName);
 	  toolboxUpdate();
   }
 	return;

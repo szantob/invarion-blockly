@@ -9,6 +9,25 @@
   <script src="./blockly/javascript_compressed.js"></script>
   <script src="./dollDef.js"></script>
   <script src="./vocabulary.js"></script>
+  <script src="./datamodel.js"></script>
+  <script src="./taxonomy.js"></script>
+  <script>
+	var workspace_xml = 
+		'<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">'+
+		  '<category name="Concept Model Blocks">'+
+			'<block type="concept_model">'+
+			  '<field name="NAME">concept model name</field>'+
+			'</block>'+
+		  '</category>'+
+		  '<category name="Vocabulary" custom="VOCABULARY"></category>'+
+		  '<category name="Taxonomy" custom="TAXONOMY"></category>'+
+		  '<category name="Data Model" custom="DATAMODEL"></category>'+
+		'</xml>';
+	var toolboxUpdate = function(){
+		workspace.updateToolbox(workspace_xml);
+		//workspace.renderTree(workspace_xml);
+	}
+  </script>
   <!-- <script src="./dollStub.js"></script> -->
   
   <style>
@@ -28,13 +47,7 @@
 
   <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
 	  <category name="Concept Model Blocks">
-		<block type="concept_model">
-		  <field name="NAME">concept model name</field>
-		</block>
 	  </category>
-	  <category name="Vocabulary" custom="VOCABULARY"></category>
-	  <category name="Taxonomy" custom="VARIABLE"></category>
-	  <category name="Data Model" custom="VARIABLE"></category>
   </xml>
   <xml xmlns="https://developers.google.com/blockly/xml" id="workspaceBlocks" style="display: none"></xml>
 
@@ -61,11 +74,14 @@
 
 	var workspace = Blockly.inject('blocklyDiv', options);
 	workspace.registerToolboxCategoryCallback('VOCABULARY', vocabularyCallback);
+	workspace.registerToolboxCategoryCallback('TAXONOMY', taxonomyCallback);
+	workspace.registerToolboxCategoryCallback('DATAMODEL', datamodelCallback);
 	workspace.registerButtonCallback('vocabularyNewEntry', vocabularyNewEntryCallback);
+	workspace.registerButtonCallback('taxonomyNewEntry', taxonomyNewEntryCallback);
 	var workspaceBlocks = document.getElementById("workspaceBlocks"); 
 	Blockly.Xml.domToWorkspace(workspaceBlocks, workspace);
+	toolboxUpdate();
   </script>
-  <script src="custom-dialog.js"></script>
 
 </body>
 </html>
