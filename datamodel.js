@@ -18,7 +18,21 @@ Blockly.Blocks['datamodel_node'] = {
     return Vocabulary.getNameListForBlocklyItem();
   }
 };
-
+Blockly.Blocks['datamodel_reference'] = {
+  init: function() {
+    this.appendDummyInput()
+        .appendField("* ")
+        .appendField(new Blockly.FieldDropdown(this.generateOptions), "NAME");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(330);
+ this.setTooltip("");
+ this.setHelpUrl("");
+  },
+  generateOptions: function() {
+    return Vocabulary.getNameListForBlocklyItem();
+  }
+};
 var datamodelCallback = function(workspace) {
   var datamodelList = Vocabulary.getNameListForBlocklyNode();
   var xmlList = [];
@@ -35,15 +49,13 @@ var datamodelCallback = function(workspace) {
 	  );
 	  xmlList.push(block);
   }
-  /*if (Blockly.Blocks['datamodel_item']) {
-	for (var i = 0; i < datamodelList.length; i++) {
+  for (var i = 0; i < datamodelList.length; i++) {
 	  var blockText = 
-		'<block type="datamodel_item">'+
-		'<field name="ITEM">' + datamodelList[i] + '</field>' +
+		'<block type="datamodel_reference">'+
+		'<field name="NAME">' + datamodelList[i] + '</field>' +
 		'</block>';
 	  var block = Blockly.Xml.textToDom(blockText);
 	  xmlList.push(block);
-	}
-  }*/
+  }
   return xmlList;
 };
