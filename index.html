@@ -26,28 +26,30 @@
   <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
 
   <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
-	  <category name="Concept Model Blcks">
+	  <category name="Concept Model Blocks">
 		<block type="concept_model">
 		  <field name="NAME">concept model name</field>
 		</block>
+	  </category>
+	  <category name="Vocabulary">
 		<block type="vocabulary_node">
 		  <field name="attributeName">attributeName</field>
 		  <field name="description">description</field>
 		</block>
-		<block type="taxonomy_node">
-		  <field name="NAME">name</field>
-		</block>
-		<block type="datamodel_node"></block>
-	  </category>
-	  <category name="Vocabulary">
 		<block type="vocabulary_item">
 		  <field name="name"></field>
 		</block>
 	  </category>
 	  <category name="Taxonomy">
+		<block type="taxonomy_node">
+		  <field name="NAME">name</field>
+		</block>
 		<block type="property_item">
 		  <field name="name">name</field>
 		</block>
+	  </category>
+	  <category name="Data Model">
+		<block type="datamodel_node"></block>
 	  </category>
   </xml>
   <xml xmlns="https://developers.google.com/blockly/xml" id="workspaceBlocks" style="display: none"></xml>
