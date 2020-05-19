@@ -1,0 +1,37 @@
+<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+	<category name="Variables">
+		<block type="logic_null"></block>
+		<block type="math_number">
+			<field name="NUM">0</field>
+		</block>
+		<block type="math_constant">
+			<field name="CONSTANT">PI</field>
+		</block>
+		<block type="logic_boolean">
+			<field name="BOOL">TRUE</field>
+		</block>
+		<block type="text">
+			<field name="TEXT"></field>
+		</block>
+	</category>
+	<category name="Concept Model Blocks">
+		<block type="concept_model">
+			<field name="NAME">concept model name</field>
+		</block>
+		<block type="concept_model_dec_name">
+			<field name="NAME">concept model name</field>
+		</block>
+		<block type="concept_model_dec_vocabulary">
+			<field name="NAME">concept model name</field>
+		</block>
+		<block type="concept_model_dec_taxonomy">
+			<field name="NAME">concept model name</field>
+		</block>
+		<block type="concept_model_dec_datamodel">
+			<field name="NAME">concept model name</field>
+		</block>
+	</category>
+	<category name="Vocabulary" custom="VOCABULARY"></category>
+	<category name="Taxonomy" custom="TAXONOMY"></category>
+	<category name="Data Model" custom="DATAMODEL"></category>
+</xml>

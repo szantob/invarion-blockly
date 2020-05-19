@@ -3,14 +3,16 @@
 <head>
   <meta charset="utf-8">
   <title>Blockly Demo: Fixed Blockly</title>
-  <script src="./blockly/blockly_compressed.js"></script>
-  <script src="./blockly/blocks_compressed.js"></script>
-  <script src="./blockly/msg/js/en.js"></script>
-  <script src="./blockly/javascript_compressed.js"></script>
-  <script src="./conceptmodel.js"></script>
-  <script src="./vocabulary.js"></script>
-  <script src="./datamodel.js"></script>
-  <script src="./taxonomy.js"></script>
+  <script src="./js/blockly/blockly_compressed.js"></script>
+  <script src="./js/blockly/blocks_compressed.js"></script>
+  <script src="./js/blockly/msg/js/en.js"></script>
+  <script src="./js/blockly/javascript_compressed.js"></script>
+  <script src="./js/doll/conceptmodel.js"></script>
+  <script src="./js/doll/vocabulary.js"></script>
+  <script src="./js/doll/datamodel.js"></script>
+  <script src="./js/doll/taxonomy.js"></script>
+  <script id="toolboxxml" type="notjs" src="./toolbox.xml"></script>
+  <style src="./css/style.css"></style>
   <script>
 	var workspace_xml = 
 		'<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">'+
@@ -22,49 +24,34 @@
 			  '<field name="NAME">concept model name</field>'+
 			'</block>'+
 			'<block type="concept_model_dec_vocabulary">'+
-			  '<field name="NAME">concept model name</field>'+
 			'</block>'+
 			'<block type="concept_model_dec_taxonomy">'+
-			  '<field name="NAME">concept model name</field>'+
 			'</block>'+
 			'<block type="concept_model_dec_datamodel">'+
-			  '<field name="NAME">concept model name</field>'+
 			'</block>'+
 		  '</category>'+
 		  '<category name="Vocabulary" custom="VOCABULARY"></category>'+
 		  '<category name="Taxonomy" custom="TAXONOMY"></category>'+
 		  '<category name="Data Model" custom="DATAMODEL"></category>'+
 		'</xml>';
-	var toolboxUpdate = function(){
-		workspace.updateToolbox(workspace_xml);
-		//workspace.renderTree(workspace_xml);
-	}
+		var onSave = function(){
+			console.log("Save");
+		};
   </script>
-  <!-- <script src="./dollStub.js"></script> -->
-  
-  <style>
-    body {
-      background-color: #fff;
-      font-family: sans-serif;
-    }
-    h1 {
-      font-weight: normal;
-      font-size: 140%;
-    }
-  </style>
 </head>
 <body>
+	<nav width="100%" height="100px">
+		<button onclick="onSave()">Save</button>
+	</nav>
+	<div id="blocklyDiv" style="height: 720px; width: 1280px;"></div>
 
-  <div id="blocklyDiv" style="height: 480px; width: 600px;"></div>
+	<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+		<category name="Concept Model Blocks">
+		</category>
+	</xml>
+	<xml xmlns="https://developers.google.com/blockly/xml" id="workspaceBlocks" style="display: none"></xml>
 
-  <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
-	  <category name="Concept Model Blocks">
-	  </category>
-  </xml>
-  <xml xmlns="https://developers.google.com/blockly/xml" id="workspaceBlocks" style="display: none"></xml>
-
-  <script>
-  
+	<script>
 	var toolbox = document.getElementById("toolbox");
 
 	var options = { 
@@ -83,7 +70,12 @@
 		sounds : true, 
 		oneBasedIndex : true
 	};
-
+	
+	
+	var toolboxUpdate = function(){
+		workspace.updateToolbox(workspace_xml);
+	}
+	
 	var workspace = Blockly.inject('blocklyDiv', options);
 	workspace.registerToolboxCategoryCallback('VOCABULARY', vocabularyCallback);
 	workspace.registerToolboxCategoryCallback('TAXONOMY', taxonomyCallback);
@@ -93,7 +85,10 @@
 	var workspaceBlocks = document.getElementById("workspaceBlocks"); 
 	Blockly.Xml.domToWorkspace(workspaceBlocks, workspace);
 	toolboxUpdate();
+	
+	onSave = function(){
+		console.log(Blockly.Xml.workspaceToDom(workspace));
+	};
   </script>
-
 </body>
 </html>
