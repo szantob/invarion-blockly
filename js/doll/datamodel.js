@@ -8,8 +8,8 @@ Blockly.Blocks['datamodel_node'] = {
     this.appendStatementInput("children")
         .setCheck("dataModel_node")
         .appendField("children:");
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
+    this.setPreviousStatement(true, "dataModelNode");
+    this.setNextStatement(true, "dataModelNode");
     this.setColour(330);
  this.setTooltip("");
  this.setHelpUrl("");
@@ -28,12 +28,12 @@ Blockly.Blocks['datamodel_reference'] = {
     this.appendDummyInput()
         .appendField("* ")
         .appendField(new Blockly.FieldDropdown(this.generateOptions()), "NAME");
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
+    this.setPreviousStatement(true, "dataModelNode");
+    this.setNextStatement(true, "dataModelNode");
     this.setColour(330);
- this.setTooltip("");
- this.setHelpUrl("");
-  },
+	this.setTooltip("");
+	this.setHelpUrl("");
+	},
   generateOptions: function(){
 	var items = [];
 	for (var i = 0; i < Vocabulary.length(); i++) {

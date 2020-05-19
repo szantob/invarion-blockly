@@ -9,7 +9,7 @@ Blockly.Blocks['concept_model'] = {
         .setCheck("taxonomy_node")
         .appendField("taxonomy:");
     this.appendStatementInput("dataModel")
-        .setCheck("dataModel_node")
+        .setCheck("dataModelNode")
         .appendField("dataModel:");
     this.setInputsInline(true);
     this.setColour(230);
