@@ -1,21 +1,17 @@
 var Taxonomy = {
-	itemArray : [],
-	getNameListForBlocklyItem : function(){
-		var list = []
-		for (var i = 0; i < this.itemArray.length; i++) {
-			list.push([this.itemArray[i],this.itemArray[i].toUpperCase()]);
-		}
-		return list;
+	itemList : [],
+	length : function(){
+		return this.itemList.length}
+	,
+	getTaxonomy : function(){
+		return this.itemList;
 	},
-	getNameListForBlocklyNode : function(){
-		var list = []
-		for (var i = 0; i < this.itemArray.length; i++) {
-			list.push(this.itemArray[i].toUpperCase());
-		}
-		return list;
+	get : function(i){
+		return this.itemList[i];
 	},
 	addItem : function(itemName){
-		this.itemArray.push(itemName);
+		this.itemList.push(itemName);
+		onVocabularyRefresh();
 	}
 }
 Blockly.Blocks['taxonomy_node'] = {
@@ -30,8 +26,13 @@ Blockly.Blocks['taxonomy_node'] = {
  this.setTooltip("");
  this.setHelpUrl("");
   },
-  generateOptions: function() {
-    return Taxonomy.getNameListForBlocklyItem();
+  generateOptions: function(){
+	var items = [];
+	for (var i = 0; i < Taxonomy.length(); i++) {
+		var item = Taxonomy.get(i);
+		items.push([item, item.toUpperCase()]);
+	}
+	return items;
   }
 };
 Blockly.Blocks['taxonomy_item'] = {
@@ -47,28 +48,32 @@ Blockly.Blocks['taxonomy_item'] = {
  this.setTooltip("");
  this.setHelpUrl("");
   },
-  generateOptions: function() {
-    return Taxonomy.getNameListForBlocklyItem();
+  generateOptions: function(){
+	var items = [];
+	for (var i = 0; i < Taxonomy.length(); i++) {
+		var item = Taxonomy.get(i);
+		items.push([item, item.toUpperCase()]);
+	}
+	return items;
   }
 };
 
 var taxonomyCallback = function(workspace) {
-  var taxonomyList = Taxonomy.getNameListForBlocklyNode();
   var xmlList = [];
   var block = Blockly.Xml.textToDom('<button text="New entry" callbackKey="taxonomyNewEntry"></button>');
   xmlList.push(block);
-  if(taxonomyList.length == 0) return xmlList;
+  if(Taxonomy.length() == 0) return xmlList;
   var block = Blockly.Xml.textToDom(
 	'<block type="taxonomy_node">'+
-		'<field name="NAME">' + taxonomyList[0] + '</field>' +
+		'<field name="NAME">' + Taxonomy.get(0) + '</field>' +
 	'</block>'
   );
   xmlList.push(block);
   if (Blockly.Blocks['taxonomy_item']) {
-	for (var i = 0; i < taxonomyList.length; i++) {
+	for (var i = 0; i < Taxonomy.length(); i++) {
 	  var blockText = 
 		'<block type="taxonomy_item">'+
-		'<field name="ITEM">' + taxonomyList[i] + '</field>' +
+		'<field name="ITEM">' + Taxonomy.get(i) + '</field>' +
 		'</block>';
 	  var block = Blockly.Xml.textToDom(blockText);
 	  xmlList.push(block);
