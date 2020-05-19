@@ -1,21 +1,17 @@
 var Vocabulary = {
-	itemArray : [],
-	getNameListForBlocklyItem : function(){
-		var list = []
-		for (var i = 0; i < this.itemArray.length; i++) {
-			list.push([this.itemArray[i],this.itemArray[i].toUpperCase()]);
-		}
-		return list;
+	itemList : [],
+	length : function(){
+		return this.itemList.length}
+	,
+	getVocabulary : function(){
+		return this.itemList;
 	},
-	getNameListForBlocklyNode : function(){
-		var list = []
-		for (var i = 0; i < this.itemArray.length; i++) {
-			list.push(this.itemArray[i]);
-		}
-		return list;
+	get : function(i){
+		return this.itemList[i];
 	},
 	addItem : function(itemName){
-		this.itemArray.push(itemName);
+		this.itemList.push(itemName);
+		onVocabularyRefresh();
 	}
 }
 Blockly.Blocks['vocabulary_node'] = {
@@ -34,15 +30,14 @@ Blockly.Blocks['vocabulary_node'] = {
 };
 
 var vocabularyCallback = function(workspace) {
-  var vocabularyList = Vocabulary.getNameListForBlocklyNode();
   var xmlList = [];
   var block = Blockly.Xml.textToDom('<button text="New entry" callbackKey="vocabularyNewEntry"></button>');
   xmlList.push(block);
-  if(vocabularyList.length == 0) return xmlList;
-  for (var i = 0; i < vocabularyList.length; i++) {
+  if(Vocabulary.length() == 0) return xmlList;
+  for (var i = 0; i < Vocabulary.length(); i++) {
 	var blockText = 
 	  '<block type="vocabulary_node">'+
-		'<field name="NAME">' + vocabularyList[i] + '</field>' +
+		'<field name="NAME">' + Vocabulary.get(i) + '</field>' +
 	  '</block>';
 	var block = Blockly.Xml.textToDom(blockText);
 	xmlList.push(block);
@@ -58,3 +53,7 @@ var vocabularyNewEntryCallback = function(){
   }
 	return;
 };
+
+var onVocabularyRefresh = function(){
+	
+}
