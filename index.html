@@ -16,32 +16,45 @@
   <script>
 	var workspace_xml = 
 		'<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">'+
-		  '<category name="Concept Model Blocks">'+
-			'<block type="concept_model">'+
-			  '<field name="NAME">concept model name</field>'+
-			'</block>'+
-			'<block type="concept_model_dec_name">'+
-			  '<field name="NAME">concept model name</field>'+
-			'</block>'+
-			'<block type="concept_model_dec_vocabulary">'+
-			'</block>'+
-			'<block type="concept_model_dec_taxonomy">'+
-			'</block>'+
-			'<block type="concept_model_dec_datamodel">'+
-			'</block>'+
-		  '</category>'+
+		  '<category name="Concept Model Blocks" custom="CONCEPTMODEL"></category>'+
 		  '<category name="Vocabulary" custom="VOCABULARY"></category>'+
 		  '<category name="Taxonomy" custom="TAXONOMY"></category>'+
 		  '<category name="Data Model" custom="DATAMODEL"></category>'+
+		  '<category name="Variables">'+
+			'<block type="logic_null"></block>'+
+			'<block type="math_number"><field name="NUM">0</field></block>'+
+			'<block type="math_constant"><field name="CONSTANT">PI</field></block>'+
+			'<block type="logic_boolean"><field name="BOOL">TRUE</field></block>'+
+			'<block type="text"><field name="TEXT"></field></block>'+
+		  '</category>'+
 		'</xml>';
 		var onSave = function(){
-			console.log("Save");
+		};
+		var onNewVocabularyEntry = function(){
+			var itemName = prompt("New vocabulary entry name:", "Thing");
+			if (itemName == null || itemName == "") {
+			} else {
+				Vocabulary.addItem(itemName);
+				toolboxUpdate();
+				var txt = "";
+				var xml = Blockly.Xml.workspaceToDom(workspace)
+				x = xml.getElementsByTagName('block');
+				xLen = x.length;
+
+				for (i = 0; i <xLen; i++) {
+					txt += x[i].childNodes[0].nodeValue + " ";
+				}
+				console.log(txt);
+			}
+			
+			return;
 		};
   </script>
 </head>
 <body>
 	<nav width="100%" height="100px">
 		<button onclick="onSave()">Save</button>
+		<button onclick="onNewVocabularyEntry()">New Vocabulary entry</button>
 	</nav>
 	<div id="blocklyDiv" style="height: 720px; width: 1280px;"></div>
 
@@ -80,7 +93,8 @@
 	workspace.registerToolboxCategoryCallback('VOCABULARY', vocabularyCallback);
 	workspace.registerToolboxCategoryCallback('TAXONOMY', taxonomyCallback);
 	workspace.registerToolboxCategoryCallback('DATAMODEL', datamodelCallback);
-	workspace.registerButtonCallback('vocabularyNewEntry', vocabularyNewEntryCallback);
+	workspace.registerToolboxCategoryCallback('CONCEPTMODEL', conceptmodelCallback);
+	workspace.registerButtonCallback('vocabularyNewEntry', onNewVocabularyEntry);
 	workspace.registerButtonCallback('taxonomyNewEntry', taxonomyNewEntryCallback);
 	var workspaceBlocks = document.getElementById("workspaceBlocks"); 
 	Blockly.Xml.domToWorkspace(workspaceBlocks, workspace);

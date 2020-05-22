@@ -20,8 +20,8 @@ Blockly.Blocks['taxonomy_node'] = {
         .appendField(new Blockly.FieldDropdown(this.generateOptions), "NAME");
     this.appendStatementInput("children")
         .setCheck(null);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
+    this.setPreviousStatement(true, 'taxonomy_item');
+    this.setNextStatement(true, 'taxonomy_item');
     this.setColour(120);
  this.setTooltip("");
  this.setHelpUrl("");
@@ -42,8 +42,8 @@ Blockly.Blocks['taxonomy_item'] = {
     this.appendValueInput("NAME")
         .setCheck(null);
     this.setInputsInline(true);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
+    this.setPreviousStatement(true, 'taxonomy_item');
+    this.setNextStatement(true, 'taxonomy_item');
     this.setColour(120);
  this.setTooltip("");
  this.setHelpUrl("");

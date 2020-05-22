@@ -32,7 +32,7 @@ Blockly.Blocks['concept_model_dec_vocabulary'] = {
     this.appendDummyInput()
         .appendField("Vocabulary: ");
     this.appendStatementInput("NAME")
-        .setCheck(null);
+        .setCheck('vocabulary_item');
     this.setColour(230);
  this.setTooltip("");
  this.setHelpUrl("");
@@ -43,7 +43,7 @@ Blockly.Blocks['concept_model_dec_taxonomy'] = {
     this.appendDummyInput()
         .appendField("Taxonomy: ");
     this.appendStatementInput("NAME")
-        .setCheck(null);
+        .setCheck('taxonomy_item');
     this.setColour(230);
  this.setTooltip("");
  this.setHelpUrl("");
@@ -54,9 +54,17 @@ Blockly.Blocks['concept_model_dec_datamodel'] = {
     this.appendDummyInput()
         .appendField("Data Model: ");
     this.appendStatementInput("NAME")
-        .setCheck(null);
+        .setCheck('datamodel_item');
     this.setColour(230);
  this.setTooltip("");
  this.setHelpUrl("");
   }
+};
+var conceptmodelCallback = function(workspace) {
+  var xmlList = [];
+  xmlList.push(Blockly.Xml.textToDom('<block type="concept_model_dec_name"><field name="NAME">concept model name</field></block>'));
+  xmlList.push(Blockly.Xml.textToDom('<block type="concept_model_dec_vocabulary"></block>'));
+  xmlList.push(Blockly.Xml.textToDom('<block type="concept_model_dec_taxonomy"></block>'));
+  xmlList.push(Blockly.Xml.textToDom('<block type="concept_model_dec_datamodel"></block>'));
+  return xmlList;
 };

@@ -12,7 +12,7 @@ var Vocabulary = {
 	addItem : function(itemName){
 		this.itemList.push(itemName);
 		onVocabularyRefresh();
-	}
+	},
 }
 Blockly.Blocks['vocabulary_node'] = {
   init: function() {
@@ -21,8 +21,8 @@ Blockly.Blocks['vocabulary_node'] = {
         .appendField(":")
         .appendField(new Blockly.FieldTextInput("description"), "description");
     this.setInputsInline(true);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
+    this.setPreviousStatement(true, 'vocabulary_item');
+    this.setNextStatement(true, 'vocabulary_item');
     this.setColour(20);
  this.setTooltip("");
  this.setHelpUrl("");
@@ -44,7 +44,7 @@ var vocabularyCallback = function(workspace) {
   }
   return xmlList;
 };
-var vocabularyNewEntryCallback = function(){
+/*var vocabularyNewEntryCallback = function(){
 	var itemName = prompt("New vocabulary entry name:", "Thing");
   if (itemName == null || itemName == "") {
   } else {
@@ -52,7 +52,7 @@ var vocabularyNewEntryCallback = function(){
 	  toolboxUpdate();
   }
 	return;
-};
+};*/
 
 var onVocabularyRefresh = function(){
 	
