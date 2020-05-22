@@ -99,8 +99,17 @@
 	toolboxUpdate();
 	
 	onSave = function(){
-		console.log(Blockly.Xml.workspaceToDom(workspace));
+		var xml = Blockly.Xml.workspaceToDom(workspace);
+		var xml_text = Blockly.Xml.domToText(xml);
+		window.localStorage.setItem('workspaceSave', xml_text);
+		
 	};
+	window.onload = function(){
+		var xml_text = window.localStorage.getItem('workspaceSave');
+		if(xml_text == null) return;
+		var xml = Blockly.Xml.textToDom(xml_text);
+		Blockly.Xml.domToWorkspace(xml, workspace);
+	}
   </script>
 </body>
 </html>
