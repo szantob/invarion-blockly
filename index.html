@@ -84,7 +84,8 @@
 	
 	onSave = function(){
 		var wsXml = Blockly.Xml.workspaceToDom(workspace);
-		console.log(wsXml);
+		var text = Blockly.Xml.domToText(wsXml);
+		window.localStorage.setItem('workspaceSave', text);
 	};
 	onInit = function(){
 		var wsXml = Blockly.Xml.workspaceToDom(workspace);
@@ -120,12 +121,7 @@
 			}
 			console.log(txt);*/
 		}
-		
-		return;
-		var xml = Blockly.Xml.workspaceToDom(workspace);
-		var xml_text = Blockly.Xml.domToText(xml);
-		window.localStorage.setItem('workspaceSave', xml_text);
-		
+		return;		
 	};
 	var onDownload = function(){
 		var xml = Blockly.Xml.workspaceToDom(workspace);

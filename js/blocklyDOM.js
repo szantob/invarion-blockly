@@ -64,6 +64,12 @@ function BlockDOM(blockXml) {
 	this.getY = function(){
 		return parseInt(this.xml.getAttribute("y"));
 	}
+	this.isCollapsed = function(){
+		//TODO
+	}
+	this.isDisabled = function(){
+		//TODO
+	}
 	// Attribute setters
 	this.setType = function(value){
 		if(this.xml == null) this.initialize();
@@ -116,6 +122,9 @@ function BlockDOM(blockXml) {
 			}
 		}
 		return statementNodes;
+	},
+	getComments: function(block){
+		//TODO
 	},*/
 	this.toXml = function(){
 		return this.xml;
@@ -129,6 +138,9 @@ function ValueDOM(valueXml){
 };
 function StatementDOM(statementXml){
 	this.xml = statementXml;
+};
+function CommentDOM(commentXml){
+	this.xml = commentXml;
 };
 
 function createBlock(type, id, x, y){
