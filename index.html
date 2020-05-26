@@ -11,6 +11,7 @@
   <script src="./js/doll/blocks.js"></script>
   <script src="./js/doll/toolbox.js"></script>
   <script src="./js/blocklyDOM.js"></script>
+  <script src="./js/main.js"></script>
   <style src="./css/style.css"></style>
   <script>
 	var workspace_xml = 
@@ -27,9 +28,6 @@
 			'<block type="text"><field name="TEXT"></field></block>'+
 		  '</category>'+
 		'</xml>';
-		var onSave = function(){};
-		var onInit = function(){};
-		var onNewVocabularyEntry = function(){};
   </script>
 </head>
 <body>
@@ -66,7 +64,6 @@
 		oneBasedIndex : true
 	};
 	
-	
 	var toolboxUpdate = function(){
 		workspace.updateToolbox(workspace_xml);
 	}
@@ -82,58 +79,8 @@
 	Blockly.Xml.domToWorkspace(workspaceBlocks, workspace);
 	toolboxUpdate();
 	
-	onSave = function(){
-		var wsXml = Blockly.Xml.workspaceToDom(workspace);
-		var text = Blockly.Xml.domToText(wsXml);
-		window.localStorage.setItem('workspaceSave', text);
-	};
-	onInit = function(){
-		var wsXml = Blockly.Xml.workspaceToDom(workspace);
-		workspace.clear();
-		var wsDOM = new BlocklyDOM(wsXml);
-		
-		var nameBlock = createBlock("concept_model_dec_name","concept_model_name", 20,20);
-		wsDOM.add(nameBlock);
-		var vocabularyBlock = createBlock("concept_model_dec_vocabulary","concept_model_vocabulary", 20,50);
-		wsDOM.add(vocabularyBlock);
-		var taxonomyBlock = createBlock("concept_model_dec_taxonomy","concept_model_taxonomy", 320,50);
-		wsDOM.add(taxonomyBlock);
-		var datamodelBlock = createBlock("concept_model_dec_datamodel","concept_model_datamodel", 620,50);
-		wsDOM.add(datamodelBlock);
-		
-		wsXml = wsDOM.toXml();
-		workspace.clear();
-		Blockly.Xml.domToWorkspace(wsXml, workspace);
-	};
-	onNewVocabularyEntry = function(){
-		var itemName = prompt("New vocabulary entry name:", "Thing");
-		if (itemName == null || itemName == "") {
-		} else {
-			Vocabulary.addItem(itemName);
-			toolboxUpdate();
-			/*var txt = "";
-			var xml = Blockly.Xml.workspaceToDom(workspace)
-			x = xml.getElementsByTagName('block');
-			xLen = x.length;
-
-			for (i = 0; i <xLen; i++) {
-				txt += x[i].childNodes[0].nodeValue + " ";
-			}
-			console.log(txt);*/
-		}
-		return;		
-	};
-	var onDownload = function(){
-		var xml = Blockly.Xml.workspaceToDom(workspace);
-		var xml_text = Blockly.Xml.domToText(xml);
-		var blob = new Blob([xml_text], { type: "text/xml;charset=utf-8" });
-		saveAs(blob, "workspace.xml");
-	}
 	window.onload = function(){
-		var xml_text = window.localStorage.getItem('workspaceSave');
-		if(xml_text == null) return;
-		var xml = Blockly.Xml.textToDom(xml_text);
-		Blockly.Xml.domToWorkspace(xml, workspace);
+		onLoad();
 	}
   </script>
 </body>

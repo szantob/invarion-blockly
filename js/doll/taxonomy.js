@@ -11,19 +11,16 @@ var Taxonomy = {
 	},
 	addItem : function(itemName){
 		this.itemList.push(itemName);
-		onVocabularyRefresh();
+		//onVocabularyRefresh();
 	},
+	
 	onSave : function(){
+		
+	},
+	onLoad : function(){
+		
+	},
+	onRefresh : function(){
 		
 	}
 }
-
-var taxonomyNewEntryCallback = function(){
-	var itemName = prompt("New taxonomy entry name:", "Thing");
-  if (itemName == null || itemName == "") {
-  } else {
-	  Taxonomy.addItem(itemName);
-	  toolboxUpdate();
-  }
-	return;
-};

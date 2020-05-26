@@ -11,16 +11,17 @@ var Vocabulary = {
 	},
 	addItem : function(itemName){
 		this.itemList.push(itemName);
-		onVocabularyRefresh();
+		//onVocabularyRefresh();
 	},
 	
 	
 	onSave : function(){
 		
+	},
+	onLoad : function(){
+		
+	},
+	onRefresh : function(){
+		
 	}
-}
-
-
-var onVocabularyRefresh = function(){
-	
 }

@@ -34,15 +34,13 @@ var taxonomyCallback = function(workspace) {
 	'</block>'
   );
   xmlList.push(block);
-  if (Blockly.Blocks['taxonomy_item']) {
-	for (var i = 0; i < Taxonomy.length(); i++) {
-	  var blockText = 
-		'<block type="taxonomy_item">'+
-		'<field name="ITEM">' + Taxonomy.get(i) + '</field>' +
-		'</block>';
-	  var block = Blockly.Xml.textToDom(blockText);
-	  xmlList.push(block);
-	}
+  for (var i = 0; i < Taxonomy.length(); i++) {
+    var blockText = 
+	  '<block type="taxonomy_item">'+
+		  '<field name="NAME">' + Taxonomy.get(i) + '</field>' +
+	  '</block>';
+    var block = Blockly.Xml.textToDom(blockText);
+    xmlList.push(block);
   }
   return xmlList;
 };
