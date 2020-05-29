@@ -2,8 +2,23 @@ var onSave = function(){
 	var wsXml = Blockly.Xml.workspaceToDom(workspace);
 	var text = Blockly.Xml.domToText(wsXml);
 	window.localStorage.setItem('workspaceSave', text);
+	Vocabulary.onSave();
+	Taxonomy.onSave();
 };
 var onLoad = function(){
+	Vocabulary.onLoad();
+	Taxonomy.onLoad();
+	
+	workspace.registerToolboxCategoryCallback('VOCABULARY', vocabularyCallback);
+	workspace.registerToolboxCategoryCallback('TAXONOMY', taxonomyCallback);
+	workspace.registerToolboxCategoryCallback('DATAMODEL', datamodelCallback);
+	workspace.registerToolboxCategoryCallback('CONCEPTMODEL', conceptmodelCallback);
+	workspace.registerButtonCallback('vocabularyNewEntry', onNewVocabularyEntry);
+	workspace.registerButtonCallback('taxonomyNewEntry', taxonomyNewEntryCallback);
+	/*var workspaceBlocks = document.getElementById("workspaceBlocks"); 
+	Blockly.Xml.domToWorkspace(workspaceBlocks, workspace);*/
+	toolboxUpdate();
+	
 	var xml_text = window.localStorage.getItem('workspaceSave');
 	if(xml_text == null) return;
 	var xml = Blockly.Xml.textToDom(xml_text);
@@ -55,3 +70,8 @@ var taxonomyNewEntryCallback = function(){
   }
 	return;
 };
+
+
+var toolboxUpdate = function(){
+	workspace.updateToolbox(workspace_xml);
+}

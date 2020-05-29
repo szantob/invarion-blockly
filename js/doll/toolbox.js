@@ -8,6 +8,8 @@ var conceptmodelCallback = function(workspace) {
 };
 
 var vocabularyCallback = function(workspace) {
+  console.log(Vocabulary.itemList);
+  
   var xmlList = [];
   var block = Blockly.Xml.textToDom('<button text="New entry" callbackKey="vocabularyNewEntry"></button>');
   xmlList.push(block);
