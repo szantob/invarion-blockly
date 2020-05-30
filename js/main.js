@@ -50,7 +50,7 @@ var onNewVocabularyEntry = function(){
 	var itemName = prompt("New vocabulary entry name:", "Thing");
 	if (itemName == null || itemName == "") {
 	} else {
-		Vocabulary.addItem(itemName);
+		dataProvider.Vocabulary.addItem(itemName);
 		toolboxUpdate();
 	}
 	return;		
