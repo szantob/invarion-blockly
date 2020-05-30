@@ -1,13 +1,14 @@
-var onSave = function(){
+var dataProvider =DataProvider.getInstance();
+
+function onSave(){
 	var wsXml = Blockly.Xml.workspaceToDom(workspace);
 	var text = Blockly.Xml.domToText(wsXml);
 	window.localStorage.setItem('workspaceSave', text);
-	Vocabulary.onSave();
-	Taxonomy.onSave();
+	dataProvider.onSave();
 };
-var onLoad = function(){
-	Vocabulary.onLoad();
-	Taxonomy.onLoad();
+function onLoad(){
+	dataProvider.onLoad();
+	console.log(dataProvider);
 	
 	workspace.registerToolboxCategoryCallback('VOCABULARY', vocabularyCallback);
 	workspace.registerToolboxCategoryCallback('TAXONOMY', taxonomyCallback);
@@ -15,17 +16,12 @@ var onLoad = function(){
 	workspace.registerToolboxCategoryCallback('CONCEPTMODEL', conceptmodelCallback);
 	workspace.registerButtonCallback('vocabularyNewEntry', onNewVocabularyEntry);
 	workspace.registerButtonCallback('taxonomyNewEntry', taxonomyNewEntryCallback);
-	/*var workspaceBlocks = document.getElementById("workspaceBlocks"); 
-	Blockly.Xml.domToWorkspace(workspaceBlocks, workspace);*/
-	toolboxUpdate();
 	
-	var xml_text = window.localStorage.getItem('workspaceSave');
-	if(xml_text == null) return;
-	var xml = Blockly.Xml.textToDom(xml_text);
-	Blockly.Xml.domToWorkspace(xml, workspace);
+	toolboxUpdate();
 };
 
-var onInit = function(){
+
+function onInit(){
 	var wsXml = Blockly.Xml.workspaceToDom(workspace);
 	workspace.clear();
 	var wsDOM = new BlocklyDOM(wsXml);
@@ -44,24 +40,24 @@ var onInit = function(){
 	Blockly.Xml.domToWorkspace(wsXml, workspace);
 };
 
-var onNewVocabularyEntry = function(){
+function onNewVocabularyEntry(){
 	var itemName = prompt("New vocabulary entry name:", "Thing");
 	if (itemName == null || itemName == "") {
 	} else {
-		Vocabulary.addItem(itemName);
+		dataProvider.Vocabulary.addItem(itemName);
 		toolboxUpdate();
 	}
 	return;		
 };
 
-var onDownload = function(){
+function onDownload(){
 	var xml = Blockly.Xml.workspaceToDom(workspace);
 	var xml_text = Blockly.Xml.domToText(xml);
 	var blob = new Blob([xml_text], { type: "text/xml;charset=utf-8" });
 	saveAs(blob, "workspace.xml");
 }
 
-var taxonomyNewEntryCallback = function(){
+function taxonomyNewEntryCallback(){
 	var itemName = prompt("New taxonomy entry name:", "Thing");
   if (itemName == null || itemName == "") {
   } else {
@@ -72,6 +68,6 @@ var taxonomyNewEntryCallback = function(){
 };
 
 
-var toolboxUpdate = function(){
+function toolboxUpdate(){
 	workspace.updateToolbox(workspace_xml);
 }

@@ -1,3 +1,5 @@
+var dataProvider =DataProvider.getInstance();
+
 Blockly.Blocks['concept_model'] = {
   init: function() {
     this.appendDummyInput()
@@ -138,8 +140,8 @@ Blockly.Blocks['datamodel_node'] = {
   },
   generateOptions: function(){
 	var items = [];
-	for (var i = 0; i < Vocabulary.length(); i++) {
-		var item = Vocabulary.get(i);
+	for (var i = 0; i < dataProvider.Vocabulary.length(); i++) {
+		var item = dataProvider.Vocabulary.get(i);
 		items.push([item, item.toUpperCase()]);
 	}
 	return items;
@@ -158,8 +160,8 @@ Blockly.Blocks['datamodel_reference'] = {
 	},
   generateOptions: function(){
 	var items = [];
-	for (var i = 0; i < Vocabulary.length(); i++) {
-		var item = Vocabulary.get(i);
+	for (var i = 0; i < dataProvider.Vocabulary.length(); i++) {
+		var item = dataProvider.Vocabulary.get(i);
 		items.push([item, item.toUpperCase()]);
 	}
 	return items;
@@ -181,8 +183,8 @@ Blockly.Blocks['datamodel_node_ref'] = {
   },
   generateOptions: function(){
 	var items = [];
-	for (var i = 0; i < Vocabulary.length(); i++) {
-		var item = Vocabulary.get(i);
+	for (var i = 0; i < dataProvider.Vocabulary.length(); i++) {
+		var item = dataProvider.Vocabulary.get(i);
 		items.push([item, item.toUpperCase()]);
 	}
 	return items;

@@ -1,3 +1,5 @@
+var dataProvider =DataProvider.getInstance();
+
 var conceptmodelCallback = function(workspace) {
   var xmlList = [];
   xmlList.push(Blockly.Xml.textToDom('<block type="concept_model_dec_name"><field name="NAME">concept model name</field></block>'));
@@ -8,16 +10,16 @@ var conceptmodelCallback = function(workspace) {
 };
 
 var vocabularyCallback = function(workspace) {
-  console.log(Vocabulary.itemList);
+  console.log(dataProvider.Vocabulary.itemList);
   
   var xmlList = [];
   var block = Blockly.Xml.textToDom('<button text="New entry" callbackKey="vocabularyNewEntry"></button>');
   xmlList.push(block);
-  if(Vocabulary.length() == 0) return xmlList;
-  for (var i = 0; i < Vocabulary.length(); i++) {
+  if(dataProvider.Vocabulary.length() == 0) return xmlList;
+  for (var i = 0; i < dataProvider.Vocabulary.length(); i++) {
 	var blockText = 
 	  '<block type="vocabulary_node">'+
-		'<field name="NAME">' + Vocabulary.get(i) + '</field>' +
+		'<field name="NAME">' + dataProvider.Vocabulary.get(i) + '</field>' +
 	  '</block>';
 	var block = Blockly.Xml.textToDom(blockText);
 	xmlList.push(block);
@@ -49,7 +51,7 @@ var taxonomyCallback = function(workspace) {
 
 var datamodelCallback = function(workspace) {
   var xmlList = [];
-  if(Vocabulary.length() == 0){
+  if(dataProvider.Vocabulary.length() == 0){
 	  xmlList.push(Blockly.Xml.textToDom('<label text="No entry in Vocabulary"></label>'));
   }else{
 	  xmlList.push(Blockly.Xml.textToDom('<block type="datamodel_node"></block>'));
