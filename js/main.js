@@ -8,7 +8,6 @@ function onSave(){
 };
 function onLoad(){
 	dataProvider.onLoad();
-	console.log(dataProvider);
 	
 	workspace.registerToolboxCategoryCallback('VOCABULARY', vocabularyCallback);
 	workspace.registerToolboxCategoryCallback('TAXONOMY', taxonomyCallback);
