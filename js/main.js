@@ -18,6 +18,11 @@ function onLoad(){
 	workspace.registerButtonCallback('taxonomyNewEntry', taxonomyNewEntryCallback);
 	
 	toolboxUpdate();
+	
+	var xml_text = window.localStorage.getItem('workspaceSave');
+	if(xml_text == null) return;
+	var xml = Blockly.Xml.textToDom(xml_text);
+	Blockly.Xml.domToWorkspace(xml, workspace);
 };
 
 
@@ -62,7 +67,7 @@ var taxonomyNewEntryCallback = function(){
 	var itemName = prompt("New taxonomy entry name:", "Thing");
   if (itemName == null || itemName == "") {
   } else {
-	  Taxonomy.addItem(itemName);
+	  dataProvider.Taxonomy.addItem(itemName);
 	  toolboxUpdate();
   }
 	return;

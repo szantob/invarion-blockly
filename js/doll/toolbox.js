@@ -34,14 +34,14 @@ var taxonomyCallback = function(workspace) {
   if(dataProvider.Taxonomy.length() == 0) return xmlList;
   var block = Blockly.Xml.textToDom(
 	'<block type="taxonomy_node">'+
-		'<field name="NAME">' + dataProvider.Taxonomy.get(0) + '</field>' +
+		'<field name="NAME">' + dataProvider.Taxonomy.get(0).toUpperCase() + '</field>' +
 	'</block>'
   );
   xmlList.push(block);
   for (var i = 0; i < dataProvider.Taxonomy.length(); i++) {
     var blockText = 
 	  '<block type="taxonomy_item">'+
-		  '<field name="NAME">' + dataProvider.Taxonomy.get(i) + '</field>' +
+		  '<field name="NAME">' + dataProvider.Taxonomy.get(i).toUpperCase() + '</field>' +
 	  '</block>';
     var block = Blockly.Xml.textToDom(blockText);
     xmlList.push(block);
