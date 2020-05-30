@@ -92,8 +92,8 @@ Blockly.Blocks['taxonomy_node'] = {
   },
   generateOptions: function(){
 	var items = [];
-	for (var i = 0; i < Taxonomy.length(); i++) {
-		var item = Taxonomy.get(i);
+	for (var i = 0; i < dataProvider.Taxonomy.length(); i++) {
+		var item = dataProvider.Taxonomy.get(i);
 		items.push([item, item.toUpperCase()]);
 	}
 	return items;
@@ -114,8 +114,8 @@ Blockly.Blocks['taxonomy_item'] = {
   },
   generateOptions: function(){
 	var items = [];
-	for (var i = 0; i < Taxonomy.length(); i++) {
-		var item = Taxonomy.get(i);
+	for (var i = 0; i < dataProvider.Taxonomy.length(); i++) {
+		var item = dataProvider.Taxonomy.get(i);
 		items.push([item, item.toUpperCase()]);
 	}
 	return items;

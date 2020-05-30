@@ -31,17 +31,17 @@ var taxonomyCallback = function(workspace) {
   var xmlList = [];
   var block = Blockly.Xml.textToDom('<button text="New entry" callbackKey="taxonomyNewEntry"></button>');
   xmlList.push(block);
-  if(Taxonomy.length() == 0) return xmlList;
+  if(dataProvider.Taxonomy.length() == 0) return xmlList;
   var block = Blockly.Xml.textToDom(
 	'<block type="taxonomy_node">'+
-		'<field name="NAME">' + Taxonomy.get(0) + '</field>' +
+		'<field name="NAME">' + dataProvider.Taxonomy.get(0) + '</field>' +
 	'</block>'
   );
   xmlList.push(block);
-  for (var i = 0; i < Taxonomy.length(); i++) {
+  for (var i = 0; i < dataProvider.Taxonomy.length(); i++) {
     var blockText = 
 	  '<block type="taxonomy_item">'+
-		  '<field name="NAME">' + Taxonomy.get(i) + '</field>' +
+		  '<field name="NAME">' + dataProvider.Taxonomy.get(i) + '</field>' +
 	  '</block>';
     var block = Blockly.Xml.textToDom(blockText);
     xmlList.push(block);

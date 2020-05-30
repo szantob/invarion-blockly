@@ -22,8 +22,9 @@ function onLoad(){
 
 
 function onInit(){
-	var wsXml = Blockly.Xml.workspaceToDom(workspace);
 	workspace.clear();
+	dataProvider.onClear();
+	var wsXml = Blockly.Xml.workspaceToDom(workspace);
 	var wsDOM = new BlocklyDOM(wsXml);
 	
 	var nameBlock = createBlock("concept_model_dec_name","concept_model_name", 20,20);
@@ -40,24 +41,24 @@ function onInit(){
 	Blockly.Xml.domToWorkspace(wsXml, workspace);
 };
 
-function onNewVocabularyEntry(){
+var onNewVocabularyEntry = function(){
 	var itemName = prompt("New vocabulary entry name:", "Thing");
 	if (itemName == null || itemName == "") {
 	} else {
-		dataProvider.Vocabulary.addItem(itemName);
+		Vocabulary.addItem(itemName);
 		toolboxUpdate();
 	}
 	return;		
 };
 
-function onDownload(){
+var onDownload = function(){
 	var xml = Blockly.Xml.workspaceToDom(workspace);
 	var xml_text = Blockly.Xml.domToText(xml);
 	var blob = new Blob([xml_text], { type: "text/xml;charset=utf-8" });
 	saveAs(blob, "workspace.xml");
 }
 
-function taxonomyNewEntryCallback(){
+var taxonomyNewEntryCallback = function(){
 	var itemName = prompt("New taxonomy entry name:", "Thing");
   if (itemName == null || itemName == "") {
   } else {
