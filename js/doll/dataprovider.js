@@ -2,22 +2,22 @@ var DataProvider = (function () {
     var instance;
  
     function createInstance() {
-        var dataProvider = new Object();
+        var dataProvider = {};
 		
 		dataProvider.Vocabulary = new Vocabulary();
 		dataProvider.Taxonomy	= new Taxonomy();
 		dataProvider.onLoad = function(){
 			dataProvider.Vocabulary.onLoad();
 			dataProvider.Taxonomy.onLoad();
-		}
+		};
 		dataProvider.onSave = function(){
 			dataProvider.Vocabulary.onSave();
 			dataProvider.Taxonomy.onSave();
-		}
+		};
 		dataProvider.onClear = function(){
 			dataProvider.Vocabulary.onClear();
 			dataProvider.Taxonomy.onClear();
-		}
+		};
         return dataProvider;
     }
  
@@ -59,7 +59,7 @@ function Vocabulary(){
 		this.itemList = [];
 	};
 	this.onRefresh = function(){};
-};
+}
 function Taxonomy(){
 	this.itemList 	= [];
 	this.length 	= function(){return this.itemList.length};
@@ -67,7 +67,7 @@ function Taxonomy(){
 	this.get 		= function(i){return this.itemList[i]};
 	this.addItem 	= function(itemName){
 		if(this.itemList.includes(itemName)){
-			console.log("Item already exist")
+			console.log("Item already exist");
 			return; //TODO
 		}
 		this.itemList.push(itemName)

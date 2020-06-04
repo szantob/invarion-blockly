@@ -13,15 +13,16 @@ var vocabularyCallback = function(workspace) {
   var xmlList = [];
   var block = Blockly.Xml.textToDom('<button text="New entry" callbackKey="vocabularyNewEntry"></button>');
   xmlList.push(block);
-  if(dataProvider.Vocabulary.length() == 0) return xmlList;
-  for (var i = 0; i < dataProvider.Vocabulary.length(); i++) {
-	var blockText = 
-	  '<block type="vocabulary_node">'+
-		'<field name="NAME">' + dataProvider.Vocabulary.get(i) + '</field>' +
-	  '</block>';
-	var block = Blockly.Xml.textToDom(blockText);
-	xmlList.push(block);
-  }
+    const vocabularyEntityList = getVocabularyEntryList();
+    if(vocabularyEntityList == null) return xmlList;
+    for (var i = 0; i < vocabularyEntityList.length; i++) {
+      var blockText =
+        '<block type="vocabulary_node">'+
+          '<field name="NAME">' + vocabularyEntityList[i] + '</field>' +
+        '</block>';
+      var block = Blockly.Xml.textToDom(blockText);
+      xmlList.push(block);
+    }
   return xmlList;
 };
 
@@ -49,7 +50,8 @@ var taxonomyCallback = function(workspace) {
 
 var datamodelCallback = function(workspace) {
   var xmlList = [];
-  if(dataProvider.Vocabulary.length() == 0){
+  const vocabularyEntityList = getVocabularyEntryList();
+  if(vocabularyEntityList == null){
 	  xmlList.push(Blockly.Xml.textToDom('<label text="No entry in Vocabulary"></label>'));
   }else{
 	  xmlList.push(Blockly.Xml.textToDom('<block type="datamodel_node"></block>'));

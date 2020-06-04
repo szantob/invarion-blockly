@@ -102,7 +102,7 @@ Blockly.Blocks['taxonomy_node'] = {
 Blockly.Blocks['taxonomy_item'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown(this.generateOptions), "name");
+        .appendField(new Blockly.FieldDropdown(this.generateOptions), "NAME");
     this.appendValueInput("NAME")
         .setCheck(null);
     this.setInputsInline(true);
@@ -140,10 +140,11 @@ Blockly.Blocks['datamodel_node'] = {
   },
   generateOptions: function(){
 	var items = [];
-	for (var i = 0; i < dataProvider.Vocabulary.length(); i++) {
-		var item = dataProvider.Vocabulary.get(i);
-		items.push([item, item.toUpperCase()]);
-	}
+	var vocabularyEntityList=getVocabularyEntryList();
+      for (var i = 0; i < vocabularyEntityList.length; i++) {
+          var item = vocabularyEntityList[i];
+          items.push([item, item.toUpperCase()]);
+      }
 	return items;
   }
 };
@@ -160,11 +161,12 @@ Blockly.Blocks['datamodel_reference'] = {
 	},
   generateOptions: function(){
 	var items = [];
-	for (var i = 0; i < dataProvider.Vocabulary.length(); i++) {
-		var item = dataProvider.Vocabulary.get(i);
-		items.push([item, item.toUpperCase()]);
-	}
-	return items;
+    var vocabularyEntityList=getVocabularyEntryList();
+      for (var i = 0; i < vocabularyEntityList.length; i++) {
+          var item = vocabularyEntityList[i];
+          items.push([item, item.toUpperCase()]);
+      }
+      return items;
   }
 };
 Blockly.Blocks['datamodel_node_ref'] = {
@@ -183,8 +185,9 @@ Blockly.Blocks['datamodel_node_ref'] = {
   },
   generateOptions: function(){
 	var items = [];
-	for (var i = 0; i < dataProvider.Vocabulary.length(); i++) {
-		var item = dataProvider.Vocabulary.get(i);
+      var vocabularyEntityList=getVocabularyEntryList();
+	for (var i = 0; i < vocabularyEntityList.length; i++) {
+        var item = vocabularyEntityList[i];
 		items.push([item, item.toUpperCase()]);
 	}
 	return items;
