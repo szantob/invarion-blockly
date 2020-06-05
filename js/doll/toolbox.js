@@ -1,5 +1,3 @@
-var dataProvider =DataProvider.getInstance();
-
 var conceptmodelCallback = function(workspace) {
   var xmlList = [];
   xmlList.push(Blockly.Xml.textToDom('<block type="concept_model_dec_name"><field name="NAME">concept model name</field></block>'));
@@ -30,17 +28,18 @@ var taxonomyCallback = function(workspace) {
   var xmlList = [];
   var block = Blockly.Xml.textToDom('<button text="New entry" callbackKey="taxonomyNewEntry"></button>');
   xmlList.push(block);
-  if(dataProvider.Taxonomy.length() == 0) return xmlList;
+  const taxonomyList = getTaxonomyEntryList();
+  if(taxonomyList.length === 0) return xmlList;
   var block = Blockly.Xml.textToDom(
 	'<block type="taxonomy_node">'+
-		'<field name="NAME">' + dataProvider.Taxonomy.get(0).toUpperCase() + '</field>' +
+		'<field name="NAME">' + taxonomyList[0] + '</field>' +
 	'</block>'
   );
   xmlList.push(block);
-  for (var i = 0; i < dataProvider.Taxonomy.length(); i++) {
+  for (var i = 0; i < taxonomyList.length; i++) {
     var blockText = 
 	  '<block type="taxonomy_item">'+
-		  '<field name="NAME">' + dataProvider.Taxonomy.get(i).toUpperCase() + '</field>' +
+		  '<field name="NAME">' + taxonomyList[i] + '</field>' +
 	  '</block>';
     var block = Blockly.Xml.textToDom(blockText);
     xmlList.push(block);

@@ -1,20 +1,16 @@
-var dataProvider =DataProvider.getInstance();
-
 function onSave(){
 	var wsXml = Blockly.Xml.workspaceToDom(workspace);
 	var text = Blockly.Xml.domToText(wsXml);
 	window.localStorage.setItem('workspaceSave', text);
-	dataProvider.onSave();
 }
 function onLoad(){
-	dataProvider.onLoad();
 	
 	workspace.registerToolboxCategoryCallback('VOCABULARY', vocabularyCallback);
 	workspace.registerToolboxCategoryCallback('TAXONOMY', taxonomyCallback);
 	workspace.registerToolboxCategoryCallback('DATAMODEL', datamodelCallback);
 	workspace.registerToolboxCategoryCallback('CONCEPTMODEL', conceptmodelCallback);
 	workspace.registerButtonCallback('vocabularyNewEntry', onNewVocabularyEntry);
-	workspace.registerButtonCallback('taxonomyNewEntry', taxonomyNewEntryCallback);
+	workspace.registerButtonCallback('taxonomyNewEntry', onNewTaxonomyEntry);
 	
 	toolboxUpdate();
 	
@@ -27,7 +23,6 @@ function onLoad(){
 }
 function onInit(){
 	workspace.clear();
-	dataProvider.onClear();
 	var wsXml = Blockly.Xml.workspaceToDom(workspace);
 	var wsDOM = new BlocklyDOM(wsXml);
 	
@@ -61,9 +56,7 @@ function onNewVocabularyEntry(){
 		return;
 	}
 	addBlockToVocabulary(itemName);
-
 }
-
 function getVocabularyEntryList() {
 	const wsXml = Blockly.Xml.workspaceToDom(workspace);
 	const wsDOM = new BlocklyDOM(wsXml);
@@ -84,7 +77,6 @@ function getVocabularyEntryList() {
 	}
 	return vocabularyEntryList;
 }
-
 function addBlockToVocabulary(name){
 	const wsXml = Blockly.Xml.workspaceToDom(workspace);
 	const wsDOM = new BlocklyDOM(wsXml);
@@ -108,6 +100,80 @@ function addBlockToVocabulary(name){
 	Blockly.Xml.domToWorkspace(wsDOM.toXml(), workspace);
 }
 
+function onNewTaxonomyEntry(){
+	const itemName = prompt("New taxonomy entry name:", "Thing");
+	if (itemName == null || itemName === ""){
+		alert("Name");
+		return; //TODO
+	}
+	const entryList = getTaxonomyEntryList();
+	if((entryList!=null) && (entryList.includes(itemName))){
+		alert("Taxonomy entry with name \"" + itemName +"\" already exist.");
+		return;
+	}
+	addBlockToTaxonomy(itemName);
+}
+function getTaxonomyEntryList() {//TODO
+	const wsXml = Blockly.Xml.workspaceToDom(workspace);
+	const wsDOM = new BlocklyDOM(wsXml);
+	let taxonomyBlock = wsDOM.getBlockById("concept_model_taxonomy");
+	if(taxonomyBlock === null){ //TODO if null then NaN
+		taxonomyBlock = createBlock("concept_model_dec_taxonomy","concept_model_taxonomy");
+		taxonomyBlock.setPos(320,50);
+		wsDOM.add(taxonomyBlock);
+	}
+	let taxonomyStatement = taxonomyBlock.getStatements()[0];
+	if(taxonomyStatement === undefined) return [];
+	const firstBlock = taxonomyStatement.getBlockList()[0];
+	if(firstBlock === undefined) return [];
+	const taxonomyBlockList = taxonomyDFS(firstBlock);
+	const taxonomyEntryList = [];
+	for (let i=0; i<taxonomyBlockList.length; i++){
+		const block =taxonomyBlockList[i];
+		const nameField = block.getFieldsByName("NAME")[0];
+		taxonomyEntryList.push(nameField.getText());
+	}
+	return taxonomyEntryList;
+}
+function taxonomyDFS(taxonomyBlock){
+	let taxonomyBlockList =[];
+	taxonomyBlockList.push(taxonomyBlock);
+	const blockStatement = taxonomyBlock.getStatements()[0];
+	if(blockStatement !== undefined){
+		const childNode = blockStatement.getBlockList()[0];
+		if(childNode !== undefined){
+			taxonomyBlockList = taxonomyBlockList.concat(taxonomyDFS(childNode));
+		}
+	}
+	const nextBlock = taxonomyBlock.getNext();
+	if(nextBlock !== null){
+		taxonomyBlockList = taxonomyBlockList.concat(taxonomyDFS(nextBlock));
+	}
+	return taxonomyBlockList;
+}
+function addBlockToTaxonomy(name){//TODO
+	const wsXml = Blockly.Xml.workspaceToDom(workspace);
+	const wsDOM = new BlocklyDOM(wsXml);
+	let taxonomyBlock = wsDOM.getBlockById("concept_model_taxonomy");
+	if(taxonomyBlock === null){
+		taxonomyBlock = createBlock("concept_model_dec_taxonomy","concept_model_taxonomy");
+		taxonomyBlock.setPos(320,50);
+		wsDOM.add(taxonomyBlock);
+	}
+	let taxonomyStatement = taxonomyBlock.getStatements()[0];
+	if(taxonomyStatement === undefined){
+		taxonomyStatement = createStatement("NAME"); //TODO NAME
+		taxonomyBlock.addStatement(taxonomyStatement);
+	}
+
+	const newTaxonomyBlock = createBlock("taxonomy_node","taxonomy_node123"); //TODO ID
+	newTaxonomyBlock.addField(createField("NAME",name));
+	taxonomyStatement.push(newTaxonomyBlock);
+
+	workspace.clear();
+	Blockly.Xml.domToWorkspace(wsDOM.toXml(), workspace);
+}
+
 function onDownload(){
 	var xml = Blockly.Xml.workspaceToDom(workspace);
 	var xml_text = Blockly.Xml.domToText(xml);
@@ -115,7 +181,7 @@ function onDownload(){
 	saveAs(blob, "workspace.xml");
 }
 
-function taxonomyNewEntryCallback(){
+/*function taxonomyNewEntryCallback(){
 	var itemName = prompt("New taxonomy entry name:", "Thing");
   if (itemName == null || itemName == "") {
   } else {
@@ -123,7 +189,7 @@ function taxonomyNewEntryCallback(){
 	  toolboxUpdate();
   }
 	return;
-}
+}*/
 
 
 function toolboxUpdate(){
