@@ -1,4 +1,3 @@
-
 Blockly.Blocks['cm_name'] = {
   init: function() {
     this.appendDummyInput()
@@ -105,9 +104,6 @@ Blockly.Blocks['taxonomy_item'] = {
  this.setHelpUrl("");
   }
 };
-function test(){
-
-}
 
 Blockly.Blocks['datamodel_node'] = {
   init: function() {
@@ -115,7 +111,7 @@ Blockly.Blocks['datamodel_node'] = {
           .appendField(new Blockly.FieldLabelSerializable(""), "name");
       this.appendStatementInput("properties")
           .setCheck('taxonomy_item')
-          .appendField("properites:");
+          .appendField("properties:");
       this.appendStatementInput("children")
           .setCheck('datamodel_item')
           .appendField("children:");
@@ -144,7 +140,7 @@ Blockly.Blocks['datamodel_node_ref'] = {
         .appendField(new Blockly.FieldLabelSerializable(""), "name");
     this.appendStatementInput("properties:")
         .setCheck("taxonomy_item")
-        .appendField("properites");
+        .appendField("properties");
     this.appendStatementInput("children")
         .setCheck("datamodel_item")
         .appendField("children:");
