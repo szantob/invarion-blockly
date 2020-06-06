@@ -173,6 +173,28 @@ function addBlockToTaxonomy(name){//TODO
 	workspace.clear();
 	Blockly.Xml.domToWorkspace(wsDOM.toXml(), workspace);
 }
+function addBlockToDatamodel(name){//TODO
+	const wsXml = Blockly.Xml.workspaceToDom(workspace);
+	const wsDOM = new BlocklyDOM(wsXml);
+	let datamodelNode = wsDOM.getBlockById("concept_model_datamodel");
+	if(datamodelNode === null){
+		datamodelNode = createBlock("concept_model_dec_datamodel","concept_model_datamodel");
+		datamodelNode.setPos(620,50);
+		wsDOM.add(datamodelNode);
+	}
+	let datamodelSatement = datamodelNode.getStatements()[0];
+	if(datamodelSatement === undefined){
+		datamodelSatement = createStatement("NAME"); //TODO NAME
+		datamodelNode.addStatement(datamodelSatement);
+	}
+
+	const newDatamodelBlock = createBlock("datamodel_node","datamodel_node123"); //TODO ID
+	newDatamodelBlock.addField(createField("NAME",name));
+	datamodelSatement.push(newDatamodelBlock);
+
+	workspace.clear();
+	Blockly.Xml.domToWorkspace(wsDOM.toXml(), workspace);
+}
 
 function onDownload(){
 	var xml = Blockly.Xml.workspaceToDom(workspace);

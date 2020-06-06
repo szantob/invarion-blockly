@@ -28,15 +28,18 @@ Blockly.Blocks['concept_model_dec_name'] = {
   }
 };
 Blockly.Blocks['concept_model_dec_vocabulary'] = {
-  init: function() {
+    init: function() {
     this.appendDummyInput()
         .appendField("Vocabulary: ");
     this.appendStatementInput("NAME")
         .setCheck('vocabulary_item');
     this.setColour(230);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
+    this.setTooltip("");
+    this.setHelpUrl("");
+    this.customContextMenu = function(options) {
+        options.push({text:"New Entry",enabled:true,callback:onNewVocabularyEntry});
+    };
+    }
 };
 Blockly.Blocks['concept_model_dec_taxonomy'] = {
   init: function() {
@@ -47,6 +50,9 @@ Blockly.Blocks['concept_model_dec_taxonomy'] = {
     this.setColour(230);
  this.setTooltip("");
  this.setHelpUrl("");
+  this.customContextMenu = function(options) {
+      options.push({text:"New Entry",enabled:true,callback:onNewTaxonomyEntry});
+  };
   }
 };
 Blockly.Blocks['concept_model_dec_datamodel'] = {
@@ -62,18 +68,36 @@ Blockly.Blocks['concept_model_dec_datamodel'] = {
 };
 
 Blockly.Blocks['vocabulary_node'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldLabelSerializable(""), "NAME")
-        .appendField(":")
-        .appendField(new Blockly.FieldTextInput("description"), "description");
-    this.setInputsInline(true);
-    this.setPreviousStatement(true, 'vocabulary_item');
-    this.setNextStatement(true, 'vocabulary_item');
-    this.setColour(20);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
+    init: function() {
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldLabelSerializable(""), "NAME")
+            .appendField(":")
+            .appendField(new Blockly.FieldTextInput("description"), "description");
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, 'vocabulary_item');
+        this.setNextStatement(true, 'vocabulary_item');
+        this.setColour(20);
+        this.setTooltip("");
+        this.setHelpUrl("");
+        function onMenu1Pressed(nodeName) {
+            console.log(nodeName);
+            addBlockToDatamodel(nodeName)
+        }
+        this.customContextMenu = function(options) {
+            const NodeName = this.getField('NAME').value_;
+            const option = {};
+            option.enabled = true;
+            option.text = "Create data model node";
+            option.callback = this.menu1CallbackFactory(NodeName);
+
+            options.push(option);
+        };
+    },
+    menu1CallbackFactory: function(name){
+        return function () {
+            addBlockToDatamodel(name);
+        };
+    }
 };
 
 Blockly.Blocks['taxonomy_node'] = {
@@ -103,58 +127,43 @@ Blockly.Blocks['taxonomy_item'] = {
  this.setHelpUrl("");
   }
 };
+function test(){
+
+}
 
 Blockly.Blocks['datamodel_node'] = {
   init: function() {
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown(this.generateOptions()), "NAME");
-    this.appendStatementInput("properties")
-        .setCheck('taxonomy_item')
-        .appendField("properites:");
-    this.appendStatementInput("children")
-        .setCheck('datamodel_item')
-        .appendField("children:");
-    this.setPreviousStatement(true, "datamodel_item");
-    this.setNextStatement(true, "datamodel_item");
-    this.setColour(330);
- this.setTooltip("");
- this.setHelpUrl("");
-  },
-  generateOptions: function(){
-	var items = [];
-	var vocabularyEntityList=getVocabularyEntryList();
-      for (var i = 0; i < vocabularyEntityList.length; i++) {
-          var item = vocabularyEntityList[i];
-          items.push([item, item.toUpperCase()]);
-      }
-	return items;
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabelSerializable(""), "NAME");
+      this.appendStatementInput("properties")
+          .setCheck('taxonomy_item')
+          .appendField("properites:");
+      this.appendStatementInput("children")
+          .setCheck('datamodel_item')
+          .appendField("children:");
+      this.setPreviousStatement(true, "datamodel_item");
+      this.setNextStatement(true, "datamodel_item");
+      this.setColour(330);
+      this.setTooltip("");
+      this.setHelpUrl("");
   }
 };
 Blockly.Blocks['datamodel_reference'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("* ")
-        .appendField(new Blockly.FieldDropdown(this.generateOptions()), "NAME");
+        .appendField(new Blockly.FieldLabelSerializable(""), "NAME");
     this.setPreviousStatement(true, "datamodel_item");
     this.setNextStatement(true, "datamodel_item");
     this.setColour(330);
 	this.setTooltip("");
 	this.setHelpUrl("");
-	},
-  generateOptions: function(){
-	var items = [];
-    var vocabularyEntityList=getVocabularyEntryList();
-      for (var i = 0; i < vocabularyEntityList.length; i++) {
-          var item = vocabularyEntityList[i];
-          items.push([item, item.toUpperCase()]);
-      }
-      return items;
-  }
+	}
 };
 Blockly.Blocks['datamodel_node_ref'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField(new Blockly.FieldDropdown(this.generateOptions()), "NAME");
+        .appendField(new Blockly.FieldLabelSerializable(""), "NAME");
     this.appendStatementInput("properties:")
         .setCheck("taxonomy_item")
         .appendField("properites");
@@ -164,14 +173,5 @@ Blockly.Blocks['datamodel_node_ref'] = {
     this.setColour(330);
  this.setTooltip("");
  this.setHelpUrl("");
-  },
-  generateOptions: function(){
-	var items = [];
-      var vocabularyEntityList=getVocabularyEntryList();
-	for (var i = 0; i < vocabularyEntityList.length; i++) {
-        var item = vocabularyEntityList[i];
-		items.push([item, item.toUpperCase()]);
-	}
-	return items;
   }
 };
