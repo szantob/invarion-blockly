@@ -4,11 +4,6 @@ function onSave(){
 	window.localStorage.setItem('workspaceSave', text);
 }
 function onLoad(){
-	
-	workspace.registerToolboxCategoryCallback('VOCABULARY', vocabularyCallback);
-	workspace.registerToolboxCategoryCallback('TAXONOMY', taxonomyCallback);
-	workspace.registerToolboxCategoryCallback('DATAMODEL', datamodelCallback);
-	workspace.registerToolboxCategoryCallback('CONCEPTMODEL', conceptmodelCallback);
 	workspace.registerButtonCallback('vocabularyNewEntry', onNewVocabularyEntry);
 	workspace.registerButtonCallback('taxonomyNewEntry', onNewTaxonomyEntry);
 	
@@ -18,7 +13,9 @@ function onLoad(){
 	if(xml_text == null) return;
 	var xml = Blockly.Xml.textToDom(xml_text);
 	Blockly.Xml.domToWorkspace(xml, workspace);
-	
+
+	toolboxUpdate();
+
 	DOMTEST(xml);//TODO
 }
 function onInit(){
@@ -42,6 +39,8 @@ function onInit(){
 	wsXml = wsDOM.toXml();
 	workspace.clear();
 	Blockly.Xml.domToWorkspace(wsXml, workspace);
+
+	toolboxUpdate();
 }
 
 function onNewVocabularyEntry(){
@@ -98,6 +97,7 @@ function addBlockToVocabulary(name){
 
 	workspace.clear();
 	Blockly.Xml.domToWorkspace(wsDOM.toXml(), workspace);
+	toolboxUpdate();
 }
 
 function onNewTaxonomyEntry(){
@@ -172,6 +172,7 @@ function addBlockToTaxonomy(name){//TODO
 
 	workspace.clear();
 	Blockly.Xml.domToWorkspace(wsDOM.toXml(), workspace);
+	toolboxUpdate();
 }
 function addBlockToDatamodel(name){//TODO
 	const wsXml = Blockly.Xml.workspaceToDom(workspace);
@@ -194,6 +195,7 @@ function addBlockToDatamodel(name){//TODO
 
 	workspace.clear();
 	Blockly.Xml.domToWorkspace(wsDOM.toXml(), workspace);
+	toolboxUpdate();
 }
 
 function onDownload(){
@@ -202,22 +204,6 @@ function onDownload(){
 	var blob = new Blob([xml_text], { type: "text/xml;charset=utf-8" });
 	saveAs(blob, "workspace.xml");
 }
-
-/*function taxonomyNewEntryCallback(){
-	var itemName = prompt("New taxonomy entry name:", "Thing");
-  if (itemName == null || itemName == "") {
-  } else {
-	  dataProvider.Taxonomy.addItem(itemName);
-	  toolboxUpdate();
-  }
-	return;
-}*/
-
-
-function toolboxUpdate(){
-	workspace.updateToolbox(workspace_xml);
-}
-
 
 function DOMTEST(wsXml){
 	/*addBlockToVocabulary("Person");
