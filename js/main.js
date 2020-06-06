@@ -170,6 +170,7 @@ function addBlockToTaxonomy(name){//TODO
 
 	const newTaxonomyBlock = createBlock("taxonomy_node",getHashCode("taxonomy_node"));
 	newTaxonomyBlock.addField(createField("name",name));
+	newTaxonomyBlock.setCollapsed(true);
 	taxonomyStatement.push(newTaxonomyBlock);
 
 	workspace.clear();
@@ -212,6 +213,7 @@ function addBlockToDatamodel(name){//TODO
 
 	const newDatamodelBlock = createBlock("datamodel_node",getHashCode("datamodel_node"));
 	newDatamodelBlock.addField(createField("name",name));
+	newDatamodelBlock.setCollapsed(true);
 	datamodelSatement.push(newDatamodelBlock);
 
 	workspace.clear();
@@ -224,7 +226,7 @@ function addBlockToDatamodel(name){//TODO
 
 	toolboxUpdate();
 }
-function getDatamodelEntryList() {//TODO
+function getDatamodelEntryList() {
 	const wsXml = Blockly.Xml.workspaceToDom(workspace);
 	const wsDOM = new BlocklyDOM(wsXml);
 	let datamodelBlock = wsDOM.getBlockById("cm_datamodel");
