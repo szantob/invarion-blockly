@@ -272,6 +272,79 @@ function onDownload(){
 	saveAs(blob, "workspace.xml");
 }
 
+function onNewTaxonomyTreeEntry(parentId){
+	const itemName = prompt("New taxonomy entry name:", "Thing");
+	if (itemName == null || itemName === ""){
+		alert("Name");
+		return; //TODO
+	}
+
+	const wsXml = Blockly.Xml.workspaceToDom(workspace);
+	const wsDOM = new BlocklyDOM(wsXml);
+
+	const rootBlock = wsDOM.getBlockById(parentId);
+	rootBlock.setCollapsed(false);
+
+	let childrenStatement = rootBlock.getStatements()[0];
+	if(childrenStatement === undefined){
+		childrenStatement = createStatement("children");
+		rootBlock.addStatement(childrenStatement);
+	}
+
+
+	const newTaxonomyBlock = createBlock("taxonomy_node",getHashCode("taxonomy_node"));
+	newTaxonomyBlock.addField(createField("name",itemName));
+	newTaxonomyBlock.setCollapsed(true);
+	childrenStatement.push(newTaxonomyBlock);
+
+	workspace.clear();
+	Blockly.Xml.domToWorkspace(wsDOM.toXml(), workspace);
+
+	const vocabularyList = getVocabularyEntryList();
+	if(vocabularyList==null||!vocabularyList.includes(name)){
+		addBlockToVocabulary(itemName);
+	}
+
+	toolboxUpdate();
+	console.log(rootBlock);
+}
+function onNewDatamodelDataTreeEntry(parentId){
+	const itemName = prompt("New data model entry name:", "Thing");
+	if (itemName == null || itemName === ""){
+		alert("Name");
+		return; //TODO
+	}
+
+	const wsXml = Blockly.Xml.workspaceToDom(workspace);
+	const wsDOM = new BlocklyDOM(wsXml);
+
+	const rootBlock = wsDOM.getBlockById(parentId);
+	rootBlock.setCollapsed(false);
+
+	let childrenStatement = rootBlock.getStatements()[0];
+	if(childrenStatement === undefined){
+		childrenStatement = createStatement("children");
+		rootBlock.addStatement(childrenStatement);
+	}
+
+
+	const newDatamodelBlock = createBlock("datamodel_node",getHashCode("datamodel_node"));
+	newDatamodelBlock.addField(createField("name",itemName));
+	newDatamodelBlock.setCollapsed(true);
+	childrenStatement.push(newDatamodelBlock);
+
+	workspace.clear();
+	Blockly.Xml.domToWorkspace(wsDOM.toXml(), workspace);
+
+	const vocabularyList = getVocabularyEntryList();
+	if(vocabularyList==null||!vocabularyList.includes(name)){
+		addBlockToVocabulary(itemName);
+	}
+
+	toolboxUpdate();
+	console.log(rootBlock);
+}
+
 function DOMTEST(wsXml){
 	/*addBlockToVocabulary("Person");
 	addBlockToVocabulary("PersonalName");

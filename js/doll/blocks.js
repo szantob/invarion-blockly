@@ -102,17 +102,17 @@ Blockly.Blocks['taxonomy_node'] = {
  this.setTooltip("");
  this.setHelpUrl("");
       this.customContextMenu = function(options) {
-          const NodeName = this.getField('name').value_;
+          const NodeId = this.id;
           const option = {};
-          option.enabled = false; //TODO
+          option.enabled = true; //TODO
           option.text = "New node";
-          option.callback = this.menuCallbackFactory(NodeName);
+          option.callback = this.menuCallbackFactory(NodeId);
           options.push(option);
       };
   },
-    menuCallbackFactory: function(name){
+    menuCallbackFactory: function(id){
         return function () {
-            //TODO
+            onNewTaxonomyTreeEntry(id);
         };
     }
 };
@@ -146,7 +146,21 @@ Blockly.Blocks['datamodel_node'] = {
       this.setColour(330);
       this.setTooltip("");
       this.setHelpUrl("");
-  }
+
+      this.customContextMenu = function(options) {
+          const NodeId = this.id;
+          const option = {};
+          option.enabled = true; //TODO
+          option.text = "New data model node";
+          option.callback = this.menuCallbackFactory(NodeId);
+          options.push(option);
+      };
+  },
+    menuCallbackFactory: function(id){
+        return function () {
+            onNewDatamodelDataTreeEntry(id);
+        };
+    }
 };
 Blockly.Blocks['datamodel_reference'] = {
   init: function() {
