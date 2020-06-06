@@ -60,7 +60,7 @@ function onNewVocabularyEntry(){
 function getVocabularyEntryList() {
 	const wsXml = Blockly.Xml.workspaceToDom(workspace);
 	const wsDOM = new BlocklyDOM(wsXml);
-	let vocabularyBlock = wsDOM.getBlockById("concept_model_vocabulary");
+	let vocabularyBlock = wsDOM.getBlockById("cm_vocabulary");
 	if(vocabularyBlock === null){
 		vocabularyBlock = createBlock("cm_vocabulary","cm_vocabulary");
 		vocabularyBlock.setPos(20,50);
@@ -80,9 +80,9 @@ function getVocabularyEntryList() {
 function addBlockToVocabulary(name){
 	const wsXml = Blockly.Xml.workspaceToDom(workspace);
 	const wsDOM = new BlocklyDOM(wsXml);
-	let vocabularyBlock = wsDOM.getBlockById("concept_model_vocabulary");
+	let vocabularyBlock = wsDOM.getBlockById("cm_vocabulary");
 	if(vocabularyBlock === null){
-		vocabularyBlock = createBlock("cm_vocabulary","concept_model_vocabulary");
+		vocabularyBlock = createBlock("cm_vocabulary","cm_vocabulary");
 		vocabularyBlock.setPos(20,50);
 		wsDOM.add(vocabularyBlock);
 	}
@@ -116,9 +116,9 @@ function onNewTaxonomyEntry(){
 function getTaxonomyEntryList() {//TODO
 	const wsXml = Blockly.Xml.workspaceToDom(workspace);
 	const wsDOM = new BlocklyDOM(wsXml);
-	let taxonomyBlock = wsDOM.getBlockById("concept_model_taxonomy");
+	let taxonomyBlock = wsDOM.getBlockById("cm_taxonomy");
 	if(taxonomyBlock === null){ //TODO if null then NaN
-		taxonomyBlock = createBlock("cm_taxonomy","concept_model_taxonomy");
+		taxonomyBlock = createBlock("cm_taxonomy","cm_taxonomy");
 		taxonomyBlock.setPos(320,50);
 		wsDOM.add(taxonomyBlock);
 	}
@@ -154,9 +154,9 @@ function taxonomyDFS(taxonomyBlock){
 function addBlockToTaxonomy(name){//TODO
 	const wsXml = Blockly.Xml.workspaceToDom(workspace);
 	const wsDOM = new BlocklyDOM(wsXml);
-	let taxonomyBlock = wsDOM.getBlockById("concept_model_taxonomy");
+	let taxonomyBlock = wsDOM.getBlockById("cm_taxonomy");
 	if(taxonomyBlock === null){
-		taxonomyBlock = createBlock("cm_taxonomy","concept_model_taxonomy");
+		taxonomyBlock = createBlock("cm_taxonomy","cm_taxonomy");
 		taxonomyBlock.setPos(320,50);
 		wsDOM.add(taxonomyBlock);
 	}
@@ -176,9 +176,9 @@ function addBlockToTaxonomy(name){//TODO
 function addBlockToDatamodel(name){//TODO
 	const wsXml = Blockly.Xml.workspaceToDom(workspace);
 	const wsDOM = new BlocklyDOM(wsXml);
-	let datamodelNode = wsDOM.getBlockById("concept_model_datamodel");
+	let datamodelNode = wsDOM.getBlockById("cm_datamodel");
 	if(datamodelNode === null){
-		datamodelNode = createBlock("cm_datamodel","concept_model_datamodel");
+		datamodelNode = createBlock("cm_datamodel","cm_datamodel");
 		datamodelNode.setPos(620,50);
 		wsDOM.add(datamodelNode);
 	}
