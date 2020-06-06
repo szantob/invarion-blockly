@@ -400,3 +400,8 @@ function createComment(text,h,w,pinned){
 	comment.setPinned(pinned);
 	return comment;
 }
+
+function getHashCode(string){
+	s = string.concat(Math.random());
+	return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
+}

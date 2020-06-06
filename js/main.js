@@ -2,6 +2,8 @@ function onSave(){
 	var wsXml = Blockly.Xml.workspaceToDom(workspace);
 	var text = Blockly.Xml.domToText(wsXml);
 	window.localStorage.setItem('workspaceSave', text);
+
+	console.log(wsXml);
 }
 function onLoad(){
 	workspace.registerButtonCallback('vocabularyNewEntry', onNewVocabularyEntry);
@@ -91,7 +93,7 @@ function addBlockToVocabulary(name){
 		vocabularyBlock.addStatement(vocabularyStatement);
 	}
 
-	const newVocabularyBlock = createBlock("vocabulary_node","vocabulary_node123"); //TODO ID
+	const newVocabularyBlock = createBlock("vocabulary_node",getHashCode("vocabulary_node"));
 	newVocabularyBlock.addField(createField("name",name));
 	vocabularyStatement.push(newVocabularyBlock);
 
@@ -166,13 +168,32 @@ function addBlockToTaxonomy(name){//TODO
 		taxonomyBlock.addStatement(taxonomyStatement);
 	}
 
-	const newTaxonomyBlock = createBlock("taxonomy_node","taxonomy_node123"); //TODO ID
+	const newTaxonomyBlock = createBlock("taxonomy_node",getHashCode("taxonomy_node"));
 	newTaxonomyBlock.addField(createField("name",name));
 	taxonomyStatement.push(newTaxonomyBlock);
 
 	workspace.clear();
 	Blockly.Xml.domToWorkspace(wsDOM.toXml(), workspace);
+
+	const vocabularyList = getVocabularyEntryList();
+	if(vocabularyList==null||!vocabularyList.includes(name)){
+		addBlockToVocabulary(name);
+	}
+
 	toolboxUpdate();
+}
+function onNewDatamodelEntry() {
+	const itemName = prompt("New data model entry name:", "Thing");
+	if (itemName == null || itemName === ""){
+		alert("Name");
+		return; //TODO
+	}
+	const entryList = getDatamodelEntryList();
+	if((entryList!=null) && (entryList.includes(itemName))){
+		alert("Taxonomy entry with name \"" + itemName +"\" already exist.");
+		return;
+	}
+	addBlockToDatamodel(itemName);
 }
 function addBlockToDatamodel(name){//TODO
 	const wsXml = Blockly.Xml.workspaceToDom(workspace);
@@ -189,13 +210,57 @@ function addBlockToDatamodel(name){//TODO
 		datamodelNode.addStatement(datamodelSatement);
 	}
 
-	const newDatamodelBlock = createBlock("datamodel_node","datamodel_node123"); //TODO ID
+	const newDatamodelBlock = createBlock("datamodel_node",getHashCode("datamodel_node"));
 	newDatamodelBlock.addField(createField("name",name));
 	datamodelSatement.push(newDatamodelBlock);
 
 	workspace.clear();
 	Blockly.Xml.domToWorkspace(wsDOM.toXml(), workspace);
+
+	const vocabularyList = getVocabularyEntryList();
+	if(vocabularyList==null||!vocabularyList.includes(name)){
+		addBlockToVocabulary(name);
+	}
+
 	toolboxUpdate();
+}
+function getDatamodelEntryList() {//TODO
+	const wsXml = Blockly.Xml.workspaceToDom(workspace);
+	const wsDOM = new BlocklyDOM(wsXml);
+	let datamodelBlock = wsDOM.getBlockById("cm_datamodel");
+	if(datamodelBlock === null){ //TODO if null then NaN
+		datamodelBlock = createBlock("cm_datamodel","cm_datamodel");
+		datamodelBlock.setPos(620,50);
+		wsDOM.add(datamodelBlock);
+	}
+	let datamodelStatement = datamodelBlock.getStatements()[0];
+	if(datamodelStatement === undefined) return [];
+	const firstBlock = datamodelStatement.getBlockList()[0];
+	if(firstBlock === undefined) return [];
+	const datamodelBlockList = datamodelDFS(firstBlock);
+	const taxonomyEntryList = [];
+	for (let i=0; i<datamodelBlockList.length; i++){
+		const block =datamodelBlockList[i];
+		const nameField = block.getFieldsByName("name")[0];
+		taxonomyEntryList.push(nameField.getText());
+	}
+	return taxonomyEntryList;
+}
+function datamodelDFS(datamodelBlock){
+	let datamodelBlockList =[];
+	datamodelBlockList.push(datamodelBlock);
+	const blockStatement = datamodelBlock.getStatements()[1];
+	if(blockStatement !== undefined){
+		const childNode = blockStatement.getBlockList()[0];
+		if(childNode !== undefined){
+			datamodelBlockList = datamodelBlockList.concat(taxonomyDFS(childNode));
+		}
+	}
+	const nextBlock = datamodelBlock.getNext();
+	if(nextBlock !== null){
+		datamodelBlockList = datamodelBlockList.concat(taxonomyDFS(nextBlock));
+	}
+	return datamodelBlockList;
 }
 
 function onDownload(){

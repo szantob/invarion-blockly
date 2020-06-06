@@ -18,7 +18,7 @@ Blockly.Blocks['cm_vocabulary'] = {
     this.setTooltip("");
     this.setHelpUrl("");
     this.customContextMenu = function(options) {
-        options.push({text:"New Entry",enabled:true,callback:onNewVocabularyEntry});
+        options.push({text:"New node",enabled:true,callback:onNewVocabularyEntry});
     };
     }
 };
@@ -32,7 +32,7 @@ Blockly.Blocks['cm_taxonomy'] = {
  this.setTooltip("");
  this.setHelpUrl("");
   this.customContextMenu = function(options) {
-      options.push({text:"New Entry",enabled:true,callback:onNewTaxonomyEntry});
+      options.push({text:"New node",enabled:true,callback:onNewTaxonomyEntry});
   };
   }
 };
@@ -45,6 +45,9 @@ Blockly.Blocks['cm_datamodel'] = {
     this.setColour(230);
  this.setTooltip("");
  this.setHelpUrl("");
+ this.customContextMenu = function(options) {
+      options.push({text:"New node",enabled:true,callback:onNewDatamodelEntry});
+  };
   }
 };
 
@@ -62,15 +65,25 @@ Blockly.Blocks['vocabulary_node'] = {
         this.setHelpUrl("");
         this.customContextMenu = function(options) {
             const NodeName = this.getField('name').value_;
-            const option = {};
-            option.enabled = true;
-            option.text = "Create data model node";
-            option.callback = this.menu1CallbackFactory(NodeName);
+            const option1 = {};
+            option1.enabled = true;
+            option1.text = "Add to taxonomy";
+            option1.callback = this.menu1CallbackFactory(NodeName);
+            const option2 = {};
+            option2.enabled = true;
+            option2.text = "Add to data model";
+            option2.callback = this.menu2CallbackFactory(NodeName);
 
-            options.push(option);
+            options.push(option1);
+            options.push(option2);
         };
     },
     menu1CallbackFactory: function(name){
+        return function () {
+            addBlockToTaxonomy(name)
+        };
+    },
+    menu2CallbackFactory: function(name){
         return function () {
             addBlockToDatamodel(name);
         };
@@ -88,7 +101,20 @@ Blockly.Blocks['taxonomy_node'] = {
     this.setColour(120);
  this.setTooltip("");
  this.setHelpUrl("");
-  }
+      this.customContextMenu = function(options) {
+          const NodeName = this.getField('name').value_;
+          const option = {};
+          option.enabled = false; //TODO
+          option.text = "New node";
+          option.callback = this.menuCallbackFactory(NodeName);
+          options.push(option);
+      };
+  },
+    menuCallbackFactory: function(name){
+        return function () {
+            //TODO
+        };
+    }
 };
 Blockly.Blocks['taxonomy_item'] = {
   init: function() {

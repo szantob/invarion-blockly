@@ -32,20 +32,23 @@ function getTaxonomyBlocks(){
         '<category name="Taxonomy">'+
             '<button text="New entry" callbackKey="taxonomyNewEntry"></button>';
 
-    const taxonomyList = getTaxonomyEntryList();
-    if(taxonomyList.length !== 0){
-        for (let i = 0; i < taxonomyList.length; i++) {
-            let name = taxonomyList[i];
-            const categoryText=
-                '<category name=\"'+ name +'\">' +
-                    '<block type="taxonomy_node">'+
-                        '<field name="name">' + name + '</field>' +
-                    '</block>'+
-                    '<block type="taxonomy_item">'+
-                        '<field name="name">' + name + '</field>' +
-                    '</block>'+
-                '</category>';
-            xmlText = xmlText.concat(categoryText);
+    const vocabularyList = getVocabularyEntryList();
+    const datamodelList = getDatamodelEntryList();
+    if(vocabularyList !== null){
+        for (let i = 0; i < vocabularyList.length; i++) {
+            let name = vocabularyList[i];
+            if(!datamodelList.includes(name)) {
+                const categoryText =
+                    '<category name=\"' + name + '\">' +
+                    '<block type="taxonomy_node">' +
+                    '<field name="name">' + name + '</field>' +
+                    '</block>' +
+                    '<block type="taxonomy_item">' +
+                    '<field name="name">' + name + '</field>' +
+                    '</block>' +
+                    '</category>';
+                xmlText = xmlText.concat(categoryText);
+            }
         }
     }
     xmlText = xmlText.concat('</category>');
@@ -55,30 +58,31 @@ function getDatamodelBlocks(){
     let xmlText = '<category name="Data Model">';
 
 
-    const vocabularyEntityList = getVocabularyEntryList();
-    if(vocabularyEntityList == null){
+    const vocabularyList = getVocabularyEntryList();
+    const taxonomyList = getTaxonomyEntryList();
+    if(vocabularyList == null){
         // language=XML
         xmlText = xmlText.concat('<label text="No entry in Vocabulary"/>');
     }else{
-        for (let i = 0; i < vocabularyEntityList.length; i++) {
-            let name = vocabularyEntityList[i];
-            const categoryText =
-                '<category name=\"' + name + '\">' +
-                '<block type="datamodel_node">' +
-                '<field name="name">' + name + '</field>' +
-                '</block>' +
-                '<block type="datamodel_reference">' +
-                '<field name="name">' + name + '</field>' +
-                '</block>' +
-                '<block type="datamodel_node_ref">' +
-                '<field name="name">' + name + '</field>' +
-                '</block>' +
-                '</category>';
-            xmlText = xmlText.concat(categoryText);
+        for (let i = 0; i < vocabularyList.length; i++) {
+            let name = vocabularyList[i];
+            if(!taxonomyList.includes(name)) {
+                const categoryText =
+                    '<category name=\"' + name + '\">' +
+                    '<block type="datamodel_node">' +
+                    '<field name="name">' + name + '</field>' +
+                    '</block>' +
+                    '<block type="datamodel_reference">' +
+                    '<field name="name">' + name + '</field>' +
+                    '</block>' +
+                    '<block type="datamodel_node_ref">' +
+                    '<field name="name">' + name + '</field>' +
+                    '</block>' +
+                    '</category>';
+                xmlText = xmlText.concat(categoryText);
+            }
         }
     }
-
-
     xmlText = xmlText.concat('</category>');
     return xmlText
 }
