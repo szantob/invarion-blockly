@@ -26,16 +26,16 @@ function onInit(){
 	var wsXml = Blockly.Xml.workspaceToDom(workspace);
 	var wsDOM = new BlocklyDOM(wsXml);
 	
-	var nameBlock = createBlock("concept_model_dec_name","concept_model_name");
+	var nameBlock = createBlock("cm_name","cm_name");
 	nameBlock.setPos(20,20);
 	wsDOM.add(nameBlock);
-	var vocabularyBlock = createBlock("concept_model_dec_vocabulary","concept_model_vocabulary");
+	var vocabularyBlock = createBlock("cm_vocabulary","cm_vocabulary");
 	vocabularyBlock.setPos(20,50);
 	wsDOM.add(vocabularyBlock);
-	var taxonomyBlock = createBlock("concept_model_dec_taxonomy","concept_model_taxonomy");
+	var taxonomyBlock = createBlock("cm_taxonomy","cm_taxonomy");
 	taxonomyBlock.setPos(320,50);
 	wsDOM.add(taxonomyBlock);
-	var datamodelBlock = createBlock("concept_model_dec_datamodel","concept_model_datamodel");
+	var datamodelBlock = createBlock("cm_datamodel","cm_datamodel");
 	datamodelBlock.setPos(620,50);
 	wsDOM.add(datamodelBlock);
 	
@@ -62,7 +62,7 @@ function getVocabularyEntryList() {
 	const wsDOM = new BlocklyDOM(wsXml);
 	let vocabularyBlock = wsDOM.getBlockById("concept_model_vocabulary");
 	if(vocabularyBlock === null){
-		vocabularyBlock = createBlock("concept_model_dec_vocabulary","concept_model_vocabulary");
+		vocabularyBlock = createBlock("cm_vocabulary","cm_vocabulary");
 		vocabularyBlock.setPos(20,50);
 		wsDOM.add(vocabularyBlock);
 	}
@@ -72,7 +72,7 @@ function getVocabularyEntryList() {
 	const vocabularyEntryList = [];
 	for (let i=0; i<vocabularyBlockList.length; i++){
 		const block =vocabularyBlockList[i];
-		const nameField = block.getFieldsByName("NAME")[0];
+		const nameField = block.getFieldsByName("name")[0];
 		vocabularyEntryList.push(nameField.getText());
 	}
 	return vocabularyEntryList;
@@ -82,18 +82,18 @@ function addBlockToVocabulary(name){
 	const wsDOM = new BlocklyDOM(wsXml);
 	let vocabularyBlock = wsDOM.getBlockById("concept_model_vocabulary");
 	if(vocabularyBlock === null){
-		vocabularyBlock = createBlock("concept_model_dec_vocabulary","concept_model_vocabulary");
+		vocabularyBlock = createBlock("cm_vocabulary","concept_model_vocabulary");
 		vocabularyBlock.setPos(20,50);
 		wsDOM.add(vocabularyBlock);
 	}
 	let vocabularyStatement = vocabularyBlock.getStatements()[0];
 	if(vocabularyStatement === undefined){
-		vocabularyStatement = createStatement("NAME"); //TODO NAME
+		vocabularyStatement = createStatement("name");
 		vocabularyBlock.addStatement(vocabularyStatement);
 	}
 
 	const newVocabularyBlock = createBlock("vocabulary_node","vocabulary_node123"); //TODO ID
-	newVocabularyBlock.addField(createField("NAME",name));
+	newVocabularyBlock.addField(createField("name",name));
 	vocabularyStatement.push(newVocabularyBlock);
 
 	workspace.clear();
@@ -118,7 +118,7 @@ function getTaxonomyEntryList() {//TODO
 	const wsDOM = new BlocklyDOM(wsXml);
 	let taxonomyBlock = wsDOM.getBlockById("concept_model_taxonomy");
 	if(taxonomyBlock === null){ //TODO if null then NaN
-		taxonomyBlock = createBlock("concept_model_dec_taxonomy","concept_model_taxonomy");
+		taxonomyBlock = createBlock("cm_taxonomy","concept_model_taxonomy");
 		taxonomyBlock.setPos(320,50);
 		wsDOM.add(taxonomyBlock);
 	}
@@ -130,7 +130,7 @@ function getTaxonomyEntryList() {//TODO
 	const taxonomyEntryList = [];
 	for (let i=0; i<taxonomyBlockList.length; i++){
 		const block =taxonomyBlockList[i];
-		const nameField = block.getFieldsByName("NAME")[0];
+		const nameField = block.getFieldsByName("name")[0];
 		taxonomyEntryList.push(nameField.getText());
 	}
 	return taxonomyEntryList;
@@ -156,18 +156,18 @@ function addBlockToTaxonomy(name){//TODO
 	const wsDOM = new BlocklyDOM(wsXml);
 	let taxonomyBlock = wsDOM.getBlockById("concept_model_taxonomy");
 	if(taxonomyBlock === null){
-		taxonomyBlock = createBlock("concept_model_dec_taxonomy","concept_model_taxonomy");
+		taxonomyBlock = createBlock("cm_taxonomy","concept_model_taxonomy");
 		taxonomyBlock.setPos(320,50);
 		wsDOM.add(taxonomyBlock);
 	}
 	let taxonomyStatement = taxonomyBlock.getStatements()[0];
 	if(taxonomyStatement === undefined){
-		taxonomyStatement = createStatement("NAME"); //TODO NAME
+		taxonomyStatement = createStatement("name");
 		taxonomyBlock.addStatement(taxonomyStatement);
 	}
 
 	const newTaxonomyBlock = createBlock("taxonomy_node","taxonomy_node123"); //TODO ID
-	newTaxonomyBlock.addField(createField("NAME",name));
+	newTaxonomyBlock.addField(createField("name",name));
 	taxonomyStatement.push(newTaxonomyBlock);
 
 	workspace.clear();
@@ -178,18 +178,18 @@ function addBlockToDatamodel(name){//TODO
 	const wsDOM = new BlocklyDOM(wsXml);
 	let datamodelNode = wsDOM.getBlockById("concept_model_datamodel");
 	if(datamodelNode === null){
-		datamodelNode = createBlock("concept_model_dec_datamodel","concept_model_datamodel");
+		datamodelNode = createBlock("cm_datamodel","concept_model_datamodel");
 		datamodelNode.setPos(620,50);
 		wsDOM.add(datamodelNode);
 	}
 	let datamodelSatement = datamodelNode.getStatements()[0];
 	if(datamodelSatement === undefined){
-		datamodelSatement = createStatement("NAME"); //TODO NAME
+		datamodelSatement = createStatement("name");
 		datamodelNode.addStatement(datamodelSatement);
 	}
 
 	const newDatamodelBlock = createBlock("datamodel_node","datamodel_node123"); //TODO ID
-	newDatamodelBlock.addField(createField("NAME",name));
+	newDatamodelBlock.addField(createField("name",name));
 	datamodelSatement.push(newDatamodelBlock);
 
 	workspace.clear();
@@ -240,9 +240,9 @@ function DOMTEST(wsXml){
 
 	datamodelBlock.setComment(createComment("asd",80,160,false));
 	
-	var vocabularyStatement = createStatement("NAME");
+	var vocabularyStatement = createStatement("name");
 	var vocabularyTestBlock = createBlock("vocabulary_node","vocabulary_node123");
-	vocabularyTestBlock.addField(createField("NAME","Person"));
+	vocabularyTestBlock.addField(createField("name","Person"));
 	//vocabularyTestBlock.addField(createField("description","A Human being"));
 	vocabularyStatement.push(vocabularyTestBlock);
 	vocabularyBlock.addStatement(vocabularyStatement);

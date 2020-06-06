@@ -1,37 +1,19 @@
-/*Blockly.Blocks['concept_model'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldTextInput("concept model name"), "NAME");
-    this.appendStatementInput("vocabulary")
-        .setCheck("vocabulary_node")
-        .appendField("vocabulary:");
-    this.appendStatementInput("taxonomy")
-        .setCheck("taxonomy_node")
-        .appendField("taxonomy:");
-    this.appendStatementInput("dataModel")
-        .setCheck("dataModelNode")
-        .appendField("dataModel:");
-    this.setInputsInline(true);
-    this.setColour(230);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
-};*/
-Blockly.Blocks['concept_model_dec_name'] = {
+
+Blockly.Blocks['cm_name'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("name: ")
-        .appendField(new Blockly.FieldTextInput("default"), "NAME");
+        .appendField(new Blockly.FieldTextInput("default"), "name");
     this.setColour(230);
  this.setTooltip("");
  this.setHelpUrl("");
   }
 };
-Blockly.Blocks['concept_model_dec_vocabulary'] = {
+Blockly.Blocks['cm_vocabulary'] = {
     init: function() {
     this.appendDummyInput()
         .appendField("Vocabulary: ");
-    this.appendStatementInput("NAME")
+    this.appendStatementInput("name")
         .setCheck('vocabulary_item');
     this.setColour(230);
     this.setTooltip("");
@@ -41,11 +23,11 @@ Blockly.Blocks['concept_model_dec_vocabulary'] = {
     };
     }
 };
-Blockly.Blocks['concept_model_dec_taxonomy'] = {
+Blockly.Blocks['cm_taxonomy'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("Taxonomy: ");
-    this.appendStatementInput("NAME")
+    this.appendStatementInput("name")
         .setCheck('taxonomy_item');
     this.setColour(230);
  this.setTooltip("");
@@ -55,11 +37,11 @@ Blockly.Blocks['concept_model_dec_taxonomy'] = {
   };
   }
 };
-Blockly.Blocks['concept_model_dec_datamodel'] = {
+Blockly.Blocks['cm_datamodel'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("Data Model: ");
-    this.appendStatementInput("NAME")
+    this.appendStatementInput("name")
         .setCheck('datamodel_item');
     this.setColour(230);
  this.setTooltip("");
@@ -70,7 +52,7 @@ Blockly.Blocks['concept_model_dec_datamodel'] = {
 Blockly.Blocks['vocabulary_node'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField(new Blockly.FieldLabelSerializable(""), "NAME")
+            .appendField(new Blockly.FieldLabelSerializable(""), "name")
             .appendField(":")
             .appendField(new Blockly.FieldTextInput("description"), "description");
         this.setInputsInline(true);
@@ -79,12 +61,8 @@ Blockly.Blocks['vocabulary_node'] = {
         this.setColour(20);
         this.setTooltip("");
         this.setHelpUrl("");
-        function onMenu1Pressed(nodeName) {
-            console.log(nodeName);
-            addBlockToDatamodel(nodeName)
-        }
         this.customContextMenu = function(options) {
-            const NodeName = this.getField('NAME').value_;
+            const NodeName = this.getField('name').value_;
             const option = {};
             option.enabled = true;
             option.text = "Create data model node";
@@ -103,7 +81,7 @@ Blockly.Blocks['vocabulary_node'] = {
 Blockly.Blocks['taxonomy_node'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField(new Blockly.FieldLabelSerializable(""), "NAME");
+        .appendField(new Blockly.FieldLabelSerializable(""), "name");
     this.appendStatementInput("children")
         .setCheck('taxonomy_item');
     this.setPreviousStatement(true, 'taxonomy_item');
@@ -116,8 +94,8 @@ Blockly.Blocks['taxonomy_node'] = {
 Blockly.Blocks['taxonomy_item'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField(new Blockly.FieldLabelSerializable(""), "NAME");
-    this.appendValueInput("NAME")
+        .appendField(new Blockly.FieldLabelSerializable(""), "name");
+    this.appendValueInput("name")
         .setCheck(null);
     this.setInputsInline(true);
     this.setPreviousStatement(true, 'taxonomy_item');
@@ -134,7 +112,7 @@ function test(){
 Blockly.Blocks['datamodel_node'] = {
   init: function() {
       this.appendDummyInput()
-          .appendField(new Blockly.FieldLabelSerializable(""), "NAME");
+          .appendField(new Blockly.FieldLabelSerializable(""), "name");
       this.appendStatementInput("properties")
           .setCheck('taxonomy_item')
           .appendField("properites:");
@@ -152,7 +130,7 @@ Blockly.Blocks['datamodel_reference'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("* ")
-        .appendField(new Blockly.FieldLabelSerializable(""), "NAME");
+        .appendField(new Blockly.FieldLabelSerializable(""), "name");
     this.setPreviousStatement(true, "datamodel_item");
     this.setNextStatement(true, "datamodel_item");
     this.setColour(330);
@@ -163,7 +141,7 @@ Blockly.Blocks['datamodel_reference'] = {
 Blockly.Blocks['datamodel_node_ref'] = {
   init: function() {
     this.appendDummyInput()
-        .appendField(new Blockly.FieldLabelSerializable(""), "NAME");
+        .appendField(new Blockly.FieldLabelSerializable(""), "name");
     this.appendStatementInput("properties:")
         .setCheck("taxonomy_item")
         .appendField("properites");
