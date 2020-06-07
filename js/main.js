@@ -345,6 +345,31 @@ function onNewDatamodelDataTreeEntry(parentId){
 	console.log(rootBlock);
 }
 
+function onGenerate(){
+	const wsDOM = new BlocklyDOM(Blockly.Xml.workspaceToDom(workspace));
+
+	const codeLines = [];
+
+	const datamodelNode = wsDOM.getBlockById("cm_name");
+	const name = datamodelNode.getFields()[0].getText();
+    codeLines.push("concept : {");
+    codeLines.push("    name : "+ name  +",");
+    codeLines.push("    vocabulary : {");
+    
+    codeLines.push("    },");
+    codeLines.push("    taxonomy : {");
+
+    codeLines.push("    },");
+    codeLines.push("    dataModel : {");
+
+    codeLines.push("    },");
+    codeLines.push("}");
+
+    for(let i=0; i<codeLines.length; i++){
+        console.log(codeLines[i]);
+    }
+}
+
 function DOMTEST(wsXml){
 	/*addBlockToVocabulary("Person");
 	addBlockToVocabulary("PersonalName");
