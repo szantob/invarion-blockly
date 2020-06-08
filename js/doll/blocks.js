@@ -18,7 +18,7 @@ Blockly.Blocks['cm_vocabulary'] = {
     this.setTooltip("");
     this.setHelpUrl("");
     this.customContextMenu = function(options) {
-        options.push({text:"New node",enabled:true,callback:onNewVocabularyEntry});
+        options.push({text:"Add node",enabled:true,callback:onNewVocabularyEntry});
     };
     }
 };
@@ -32,7 +32,7 @@ Blockly.Blocks['cm_taxonomy'] = {
  this.setTooltip("");
  this.setHelpUrl("");
   this.customContextMenu = function(options) {
-      options.push({text:"New node",enabled:true,callback:onNewTaxonomyEntry});
+      options.push({text:"Add node",enabled:true,callback:onNewTaxonomyEntry});
   };
   }
 };
@@ -46,7 +46,7 @@ Blockly.Blocks['cm_datamodel'] = {
  this.setTooltip("");
  this.setHelpUrl("");
  this.customContextMenu = function(options) {
-      options.push({text:"New node",enabled:true,callback:onNewDatamodelEntry});
+      options.push({text:"Add node",enabled:true,callback:onNewDatamodelEntry});
   };
   }
 };
@@ -105,7 +105,7 @@ Blockly.Blocks['taxonomy_node'] = {
           const NodeId = this.id;
           const option = {};
           option.enabled = true; //TODO
-          option.text = "New node";
+          option.text = "Add node";
           option.callback = this.menuCallbackFactory(NodeId);
           options.push(option);
       };
@@ -135,12 +135,12 @@ Blockly.Blocks['datamodel_node'] = {
   init: function() {
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabelSerializable(""), "name");
-      this.appendStatementInput("properties")
-          .setCheck('taxonomy_item')
-          .appendField("properties:");
       this.appendStatementInput("children")
           .setCheck('datamodel_item')
           .appendField("children:");
+      this.appendStatementInput("properties")
+          .setCheck('taxonomy_item')
+          .appendField("properties:");
       this.setPreviousStatement(true, "datamodel_item");
       this.setNextStatement(true, "datamodel_item");
       this.setColour(330);
@@ -149,16 +149,26 @@ Blockly.Blocks['datamodel_node'] = {
 
       this.customContextMenu = function(options) {
           const NodeId = this.id;
-          const option = {};
-          option.enabled = true; //TODO
-          option.text = "New data model node";
-          option.callback = this.menuCallbackFactory(NodeId);
-          options.push(option);
+          const option1 = {};
+          option1.enabled = true; //TODO
+          option1.text = "Add data model node";
+          option1.callback = this.menuCallbackFactory1(NodeId);
+          options.push(option1);
+          const option2 = {};
+          option2.enabled = true; //TODO
+          option2.text = "Add property";
+          option2.callback = this.menuCallbackFactory2(NodeId);
+          options.push(option2);
       };
-  },
-    menuCallbackFactory: function(id){
+    },
+    menuCallbackFactory1: function(id){
         return function () {
             onNewDatamodelDataTreeEntry(id);
+        };
+    },
+    menuCallbackFactory2: function(id){
+        return function () {
+            onNewProperty(id);
         };
     }
 };
