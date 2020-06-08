@@ -13,7 +13,8 @@ function getVocabularyBlocks(){
         '<category name="Vocabulary">'+
             '<button text="New entry" callbackKey="vocabularyNewEntry"></button>';
 
-    const vocabularyEntityList = getVocabularyEntryList();
+
+    const vocabularyEntityList = Vocabulary.load().getEntryList();
     if(vocabularyEntityList != null){
         for (let i = 0; i < vocabularyEntityList.length; i++) {
             const blockText =
@@ -32,8 +33,8 @@ function getTaxonomyBlocks(){
         '<category name="Taxonomy">'+
             '<button text="New entry" callbackKey="taxonomyNewEntry"></button>';
 
-    const vocabularyList = getVocabularyEntryList();
-    const datamodelList = getDatamodelEntryList();
+    const vocabularyList = Vocabulary.load().getEntryList();
+    const datamodelList = Datamodel.load().getEntryList();
     if(vocabularyList !== null){
         for (let i = 0; i < vocabularyList.length; i++) {
             let name = vocabularyList[i];
@@ -58,8 +59,8 @@ function getDatamodelBlocks(){
     let xmlText = '<category name="Data Model">';
 
 
-    const vocabularyList = getVocabularyEntryList();
-    const taxonomyList = getTaxonomyEntryList();
+    const vocabularyList = Vocabulary.load().getEntryList();
+    const taxonomyList = Taxonomy.load().getEntryList();
     if(vocabularyList == null){
         // language=XML
         xmlText = xmlText.concat('<label text="No entry in Vocabulary"/>');
