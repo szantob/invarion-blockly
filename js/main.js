@@ -309,27 +309,13 @@ function onDownload(){
 
 
 function onGenerate(){
-	const wsDOM = new BlocklyDOM(Blockly.Xml.workspaceToDom(workspace));
+	const msgs = Generator.check();
 
-	const codeLines = [];
-
-	const datamodelNode = wsDOM.getBlockById("cm_name");
-	const name = datamodelNode.getFields()[0].getText();
-    codeLines.push("concept : {");
-    codeLines.push("    name : "+ name  +",");
-    codeLines.push("    vocabulary : {");
-    
-    codeLines.push("    },");
-    codeLines.push("    taxonomy : {");
-
-    codeLines.push("    },");
-    codeLines.push("    dataModel : {");
-
-    codeLines.push("    },");
-    codeLines.push("}");
-
-    for(let i=0; i<codeLines.length; i++){
-        console.log(codeLines[i]);
+    for(let i=0;i<msgs.errors.length;i++){
+        console.error(msgs.errors[i]);
+    }
+    for(let i=0;i<msgs.warnings.length;i++){
+        console.warn(msgs.warnings[i]);
     }
 }
 
