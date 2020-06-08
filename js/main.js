@@ -45,19 +45,19 @@ function RootNode(type,ctype,x,y,iterator,collapse){
         statement.push(block);
         return this;
     };
-    this.addToChild = function(childId,name){
+    this.addToChild = function(childId,statement,name,type,collapse){
         const rootBlock = this.ws.getBlockById(childId);
         rootBlock.setCollapsed(false);
 
-        let childrenStatement = rootBlock.getStatements()[0];
+        let childrenStatement = rootBlock.getStatementsByName(statement)[0];
         if(childrenStatement === undefined){
-            childrenStatement = createStatement("children");
+            childrenStatement = createStatement(statement);
             rootBlock.addStatement(childrenStatement);
         }
 
-        const block = createBlock(this.childType,getHashCode(this.childType));
+        const block = createBlock(type,getHashCode(type));
         block.addField(createField("name",name));
-        block.setCollapsed(true);
+        block.setCollapsed(collapse);
         childrenStatement.push(block);
         return this;
     };
@@ -266,7 +266,7 @@ function onNewTaxonomyTreeEntry(parentId){
         alert("Taxonomy entry with name \"" + itemName +"\" already exist.");
         return;
     }
-    Taxonomy.load().addToChild(parentId,itemName).commit();
+    Taxonomy.load().addToChild(parentId,"children",itemName,Taxonomy.childType,true).commit();
 
     if(!Vocabulary.load().includes(itemName)){
         Vocabulary.addBlock(itemName).commit();
@@ -282,11 +282,24 @@ function onNewDatamodelDataTreeEntry(parentId){
         alert("Datamodel entry with name \"" + itemName +"\" already exist.");
         return;
     }
-    Datamodel.load().addToChild(parentId,itemName).commit();
+    Datamodel.load().addToChild(parentId,"children",itemName,Datamodel.childType,true).commit();
 
     if(!Vocabulary.load().includes(itemName)){
         Vocabulary.addBlock(itemName).commit();
     }
+}
+function onNewProperty(nodeId){
+    const itemName = prompt("New Property name:", "Thing");
+    if (itemName == null || itemName === ""){
+        alert("Name");
+        return; //TODO
+    }
+    Datamodel.load().addToChild(nodeId,"properties",itemName,"taxonomy_item",false).commit();
+    if(!Taxonomy.load().includes(itemName))
+        Taxonomy.addBlock(itemName).commit();
+    if(!Vocabulary.load().includes(itemName))
+        Vocabulary.addBlock(itemName).commit();
+
 }
 
 function onDownload(){
