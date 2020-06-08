@@ -1,9 +1,10 @@
-function RootNode(type,ctype,x,y,iterator){
+function RootNode(type,ctype,x,y,iterator,collapse){
     this.id= type;
     this.childType = ctype;
     this.defX = x;
     this.defY = y;
     this.iterator = iterator;
+    this.collapse = collapse;
 
     this.ws = {};
 
@@ -40,12 +41,31 @@ function RootNode(type,ctype,x,y,iterator){
         const statement = this.getRootStatement(this.ws);
         const block = createBlock(this.childType,getHashCode(this.childType));
         block.addField(createField("name",name));
+        block.setCollapsed(this.collapse);
         statement.push(block);
         return this;
     };
+    this.addToChild = function(childId,name){
+        const rootBlock = this.ws.getBlockById(childId);
+        rootBlock.setCollapsed(false);
 
-    this.addToChild = function(){
+        let childrenStatement = rootBlock.getStatements()[0];
+        if(childrenStatement === undefined){
+            childrenStatement = createStatement("children");
+            rootBlock.addStatement(childrenStatement);
+        }
 
+        const block = createBlock(this.childType,getHashCode(this.childType));
+        block.addField(createField("name",name));
+        block.setCollapsed(true);
+        childrenStatement.push(block);
+        return this;
+    };
+
+    this.includes = function(name){
+        const entryList = this.getEntryList();
+        if((entryList!=null) && (entryList.includes(name))) return true;
+        return false;
     };
 
     this.getEntryList = function(){
@@ -59,7 +79,6 @@ function RootNode(type,ctype,x,y,iterator){
         const nameList = [];
         do{
             const block = iterator.get();
-            console.log(block.toXml());
             const nameField = block.getFieldsByName("name")[0];
             nameList.push(nameField.getText());
         }while(iterator.next());
@@ -80,7 +99,7 @@ function VocabularyIterator (firstNode){
         return true;
     }
 }
-const Vocabulary = new RootNode("cm_vocabulary","vocabulary_node",20,50,VocabularyIterator);
+const Vocabulary = new RootNode("cm_vocabulary","vocabulary_node",20,50,VocabularyIterator,false);
 
 function taxonomyDFS(taxonomyBlock){
     let taxonomyBlockList =[];
@@ -111,7 +130,7 @@ function TaxonomyIterator (firstNode){
         return true;
     }
 }
-const Taxonomy = new RootNode("cm_taxonomy","taxonomy_node",320,50,TaxonomyIterator);
+const Taxonomy = new RootNode("cm_taxonomy","taxonomy_node",320,50,TaxonomyIterator,true);
 
 function datamodelDFS(datamodelBlock){
     let datamodelBlockList =[];
@@ -142,7 +161,7 @@ function DatamodelIterator (firstNode){
         return true;
     }
 }
-const Datamodel = new RootNode("cm_datamodel","datamodel_node",620,50,DatamodelIterator);
+const Datamodel = new RootNode("cm_datamodel","datamodel_node",620,50,DatamodelIterator,true);
 
 function onSave(){
 	const wsXml = Blockly.Xml.workspaceToDom(workspace);
@@ -195,13 +214,12 @@ function onNewVocabularyEntry(){
 		alert("Name");
 		return; //TODO
 	}
-	const entryList = Vocabulary.getEntryList();
-	if((entryList!=null) && (entryList.includes(itemName))){
+	if(Vocabulary.includes(itemName)){
 		alert("Vocabulary entry with name \"" + itemName +"\" already exist.");
 		return;
 	}
-	Vocabulary.addBlock(itemName);
-	Vocabulary.commit();
+
+	Vocabulary.addBlock(itemName).commit();
 }
 function onNewTaxonomyEntry(){
     Taxonomy.load();
@@ -210,13 +228,16 @@ function onNewTaxonomyEntry(){
         alert("Name");
         return; //TODO
     }
-    const entryList = Taxonomy.getEntryList();
-    if((entryList!=null) && (entryList.includes(itemName))){
+    if(Taxonomy.includes(itemName)){
         alert("Taxonomy entry with name \"" + itemName +"\" already exist.");
         return;
     }
-    Taxonomy.addBlock(itemName);
-    Taxonomy.commit();
+
+    Taxonomy.addBlock(itemName).commit();
+
+    if(!Vocabulary.load().includes(itemName)){
+        Vocabulary.addBlock(itemName).commit();
+    }
 }
 function onNewDatamodelEntry() {
     Datamodel.load();
@@ -225,13 +246,47 @@ function onNewDatamodelEntry() {
         alert("Name");
         return; //TODO
     }
-    const entryList = Datamodel.getEntryList();
-    if((entryList!=null) && (entryList.includes(itemName))){
+    if(Datamodel.includes(itemName)){
+        alert("Datamodel entry with name \"" + itemName +"\" already exist.");
+        return;
+    }
+    Datamodel.addBlock(itemName).commit();
+
+    if(!Vocabulary.load().includes(itemName)){
+        Vocabulary.addBlock(itemName).commit();
+    }
+}
+function onNewTaxonomyTreeEntry(parentId){
+    const itemName = prompt("New taxonomy entry name:", "Thing");
+    if (itemName == null || itemName === ""){
+        alert("Name");
+        return; //TODO
+    }
+    if(Taxonomy.includes(itemName)){
         alert("Taxonomy entry with name \"" + itemName +"\" already exist.");
         return;
     }
-    Datamodel.addBlock(itemName);
-    Datamodel.commit();
+    Taxonomy.load().addToChild(parentId,itemName).commit();
+
+    if(!Vocabulary.load().includes(itemName)){
+        Vocabulary.addBlock(itemName).commit();
+    }
+}
+function onNewDatamodelDataTreeEntry(parentId){
+    const itemName = prompt("New data model entry name:", "Thing");
+    if (itemName == null || itemName === ""){
+        alert("Name");
+        return; //TODO
+    }
+    if(Datamodel.includes(itemName)){
+        alert("Datamodel entry with name \"" + itemName +"\" already exist.");
+        return;
+    }
+    Datamodel.load().addToChild(parentId,itemName).commit();
+
+    if(!Vocabulary.load().includes(itemName)){
+        Vocabulary.addBlock(itemName).commit();
+    }
 }
 
 function onDownload(){
@@ -241,78 +296,6 @@ function onDownload(){
 	saveAs(blob, "workspace.xml");
 }
 
-function onNewTaxonomyTreeEntry(parentId){
-	const itemName = prompt("New taxonomy entry name:", "Thing");
-	if (itemName == null || itemName === ""){
-		alert("Name");
-		return; //TODO
-	}
-
-	const wsXml = Blockly.Xml.workspaceToDom(workspace);
-	const wsDOM = new BlocklyDOM(wsXml);
-
-	const rootBlock = wsDOM.getBlockById(parentId);
-	rootBlock.setCollapsed(false);
-
-	let childrenStatement = rootBlock.getStatements()[0];
-	if(childrenStatement === undefined){
-		childrenStatement = createStatement("children");
-		rootBlock.addStatement(childrenStatement);
-	}
-
-
-	const newTaxonomyBlock = createBlock("taxonomy_node",getHashCode("taxonomy_node"));
-	newTaxonomyBlock.addField(createField("name",itemName));
-	newTaxonomyBlock.setCollapsed(true);
-	childrenStatement.push(newTaxonomyBlock);
-
-	workspace.clear();
-	Blockly.Xml.domToWorkspace(wsDOM.toXml(), workspace);
-
-	const vocabularyList = getVocabularyEntryList();
-	if(vocabularyList==null||!vocabularyList.includes(name)){
-		addBlockToVocabulary(itemName);
-	}
-
-	toolboxUpdate();
-	console.log(rootBlock);
-}
-function onNewDatamodelDataTreeEntry(parentId){
-	const itemName = prompt("New data model entry name:", "Thing");
-	if (itemName == null || itemName === ""){
-		alert("Name");
-		return; //TODO
-	}
-
-	const wsXml = Blockly.Xml.workspaceToDom(workspace);
-	const wsDOM = new BlocklyDOM(wsXml);
-
-	const rootBlock = wsDOM.getBlockById(parentId);
-	rootBlock.setCollapsed(false);
-
-	let childrenStatement = rootBlock.getStatements()[0];
-	if(childrenStatement === undefined){
-		childrenStatement = createStatement("children");
-		rootBlock.addStatement(childrenStatement);
-	}
-
-
-	const newDatamodelBlock = createBlock("datamodel_node",getHashCode("datamodel_node"));
-	newDatamodelBlock.addField(createField("name",itemName));
-	newDatamodelBlock.setCollapsed(true);
-	childrenStatement.push(newDatamodelBlock);
-
-	workspace.clear();
-	Blockly.Xml.domToWorkspace(wsDOM.toXml(), workspace);
-
-	const vocabularyList = getVocabularyEntryList();
-	if(vocabularyList==null||!vocabularyList.includes(name)){
-		addBlockToVocabulary(itemName);
-	}
-
-	toolboxUpdate();
-	console.log(rootBlock);
-}
 
 function DOMTEST(wsXml){
 	/*addBlockToVocabulary("Person");
