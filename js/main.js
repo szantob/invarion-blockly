@@ -45,7 +45,11 @@ function RootNode(type,ctype,x,y,iterator,collapse){
         statement.push(block);
         return this;
     };
-    this.addToChild = function(childId,statement,name,type,collapse){
+    this.addToChild = function (childId, name, statement, type, collapse){
+        if(statement === undefined) statement = "children";
+        if(type === undefined) type = this.childType;
+        if(collapse === undefined) collapse = this.collapse;
+
         const rootBlock = this.ws.getBlockById(childId);
         rootBlock.setCollapsed(false);
 
@@ -211,8 +215,7 @@ function onNewVocabularyEntry(){
     Vocabulary.load();
 	const itemName = prompt("New vocabulary entry name:", "Thing");
 	if (itemName == null || itemName === ""){
-		alert("Name");
-		return; //TODO
+		return;
 	}
 	if(Vocabulary.includes(itemName)){
 		alert("Vocabulary entry with name \"" + itemName +"\" already exist.");
@@ -225,8 +228,7 @@ function onNewTaxonomyEntry(){
     Taxonomy.load();
     const itemName = prompt("New taxonomy entry name:", "Thing");
     if (itemName == null || itemName === ""){
-        alert("Name");
-        return; //TODO
+        return;
     }
     if(Taxonomy.includes(itemName)){
         alert("Taxonomy entry with name \"" + itemName +"\" already exist.");
@@ -243,8 +245,7 @@ function onNewDatamodelEntry() {
     Datamodel.load();
     const itemName = prompt("New data model entry name:", "Thing");
     if (itemName == null || itemName === ""){
-        alert("Name");
-        return; //TODO
+        return;
     }
     if(Datamodel.includes(itemName)){
         alert("Datamodel entry with name \"" + itemName +"\" already exist.");
@@ -259,14 +260,13 @@ function onNewDatamodelEntry() {
 function onNewTaxonomyTreeEntry(parentId){
     const itemName = prompt("New taxonomy entry name:", "Thing");
     if (itemName == null || itemName === ""){
-        alert("Name");
-        return; //TODO
+        return;
     }
     if(Taxonomy.includes(itemName)){
         alert("Taxonomy entry with name \"" + itemName +"\" already exist.");
         return;
     }
-    Taxonomy.load().addToChild(parentId,"children",itemName,Taxonomy.childType,true).commit();
+    Taxonomy.load().addToChild(parentId, itemName).commit();
 
     if(!Vocabulary.load().includes(itemName)){
         Vocabulary.addBlock(itemName).commit();
@@ -275,14 +275,13 @@ function onNewTaxonomyTreeEntry(parentId){
 function onNewDatamodelDataTreeEntry(parentId){
     const itemName = prompt("New data model entry name:", "Thing");
     if (itemName == null || itemName === ""){
-        alert("Name");
-        return; //TODO
+        return;
     }
     if(Datamodel.includes(itemName)){
         alert("Datamodel entry with name \"" + itemName +"\" already exist.");
         return;
     }
-    Datamodel.load().addToChild(parentId,"children",itemName,Datamodel.childType,true).commit();
+    Datamodel.load().addToChild(parentId, itemName).commit();
 
     if(!Vocabulary.load().includes(itemName)){
         Vocabulary.addBlock(itemName).commit();
@@ -291,10 +290,9 @@ function onNewDatamodelDataTreeEntry(parentId){
 function onNewProperty(nodeId){
     const itemName = prompt("New Property name:", "Thing");
     if (itemName == null || itemName === ""){
-        alert("Name");
-        return; //TODO
+        return;
     }
-    Datamodel.load().addToChild(nodeId,"properties",itemName,"taxonomy_item",false).commit();
+    Datamodel.load().addToChild(nodeId, itemName, "properties", "taxonomy_item", false).commit();
     if(!Taxonomy.load().includes(itemName))
         Taxonomy.addBlock(itemName).commit();
     if(!Vocabulary.load().includes(itemName))

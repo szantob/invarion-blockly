@@ -135,12 +135,12 @@ Blockly.Blocks['datamodel_node'] = {
   init: function() {
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabelSerializable(""), "name");
-      this.appendStatementInput("properties")
-          .setCheck('taxonomy_item')
-          .appendField("properties:");
       this.appendStatementInput("children")
           .setCheck('datamodel_item')
           .appendField("children:");
+      this.appendStatementInput("properties")
+          .setCheck('taxonomy_item')
+          .appendField("properties:");
       this.setPreviousStatement(true, "datamodel_item");
       this.setNextStatement(true, "datamodel_item");
       this.setColour(330);
