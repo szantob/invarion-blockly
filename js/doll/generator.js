@@ -1,38 +1,4 @@
 function GeneratorC(){
-
-
-    this.check = function(){
-        const warnings = [];
-        const errors = [];
-
-        const ws = new BlocklyDOM(Blockly.Xml.workspaceToDom(workspace));
-
-        const nameBlocks = ws.getBlocksByType("cm_name");
-        const vocabularyBlocks = ws.getBlocksByType("cm_vocabulary");
-        const taxonomyBlocks = ws.getBlocksByType("cm_taxonomy");
-        const datamodelBlocks = ws.getBlocksByType("cm_datamodel");
-
-        if(nameBlocks.length === 0) errors.push("Concept model name missing");
-        if(vocabularyBlocks.length === 0) errors.push("Vocabulary missing");
-        if(taxonomyBlocks.length === 0) errors.push("Taxonomy missing");
-        if(datamodelBlocks.length === 0) errors.push("Data model missing");
-
-        if(nameBlocks.length > 1) warnings.push("Multiple concept model name declaration");
-        if(vocabularyBlocks.length > 1) warnings.push("Multiple vocabulary declaration");
-        if(taxonomyBlocks.length > 1) warnings.push("Multiple taxonomy declaration");
-        if(datamodelBlocks.length > 1) warnings.push("Multiple data model declaration");
-
-        return {warnings:warnings,errors:errors};
-    };
-    this.generate = function () {
-
-        //console.log(new Concept());
-
-        const codeLines = dollGenerator(new Concept());
-        for(let i = 0;i < codeLines.length; i++)
-            console.log(codeLines[i]);
-
-    };
     function Concept(){
         function VocabularyItem(vocabularyBlock){
             const name = vocabularyBlock.getFieldsByName("name")[0].getText();
@@ -235,10 +201,70 @@ function GeneratorC(){
         datamodelLines.push("   }");
 
         const endLines = ["}"];
-
-
-
         return cmLines.concat(vocabularyLines,taxonomyLines,datamodelLines,endLines);
+    }
+
+    function Logger(){
+        let warnings = [];
+        let errors = [];
+
+        this.clear = function(){
+            warnings = [];
+            errors = [];
+        };
+
+        this.warn = function(msg){
+            warnings.push(msg)
+        };
+        this.error = function (msg) {
+            errors.push(msg)
+        };
+
+        this.isCorrect = function(){
+            return errors.length === 0;
+        };
+        this.getMessages = function () {
+            return {
+                warnings: warnings,
+                errors : errors
+            }
+        }
+    }
+    const logger = new Logger();
+
+    let lines = [];
+
+    this.check = function(){
+        logger.clear();
+
+        const ws = new BlocklyDOM(Blockly.Xml.workspaceToDom(workspace));
+
+        const nameBlocks = ws.getBlocksByType("cm_name");
+        const vocabularyBlocks = ws.getBlocksByType("cm_vocabulary");
+        const taxonomyBlocks = ws.getBlocksByType("cm_taxonomy");
+        const datamodelBlocks = ws.getBlocksByType("cm_datamodel");
+
+        if(nameBlocks.length === 0) logger.error("Concept model name missing");
+        if(vocabularyBlocks.length === 0) logger.error("Vocabulary missing");
+        if(taxonomyBlocks.length === 0) logger.error("Taxonomy missing");
+        if(datamodelBlocks.length === 0) logger.error("Data model missing");
+
+        if(nameBlocks.length > 1) logger.error("Multiple concept model name declaration");
+        if(vocabularyBlocks.length > 1) logger.error("Multiple vocabulary declaration");
+        if(taxonomyBlocks.length > 1) logger.error("Multiple taxonomy declaration");
+        if(datamodelBlocks.length > 1) logger.error("Multiple data model declaration");
+
+        return logger.isCorrect();
+    };
+    this.generate = function () {
+        lines.length = 0;
+        lines = dollGenerator(new Concept());
+    };
+    this.getMessages = function(){
+        return logger.getMessages();
+    };
+    this.getCode = function(){
+        return lines;
     }
 }
 
