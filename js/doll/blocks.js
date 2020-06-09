@@ -118,10 +118,10 @@ Blockly.Blocks['taxonomy_node'] = {
 };
 Blockly.Blocks['taxonomy_item'] = {
   init: function() {
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldLabelSerializable(""), "name");
-    this.appendValueInput("name")
-        .setCheck(null);
+      this.appendDummyInput()
+          .appendField(new Blockly.FieldLabelSerializable(""), "name")
+          .appendField(":")
+          .appendField(new Blockly.FieldTextInput("value"), "value");
     this.setInputsInline(true);
     this.setPreviousStatement(true, 'taxonomy_item');
     this.setNextStatement(true, 'taxonomy_item');

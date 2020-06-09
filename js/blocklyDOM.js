@@ -195,7 +195,7 @@ function BlockDOM(blockXml) {
 	};
 	// Linked list functions
 	this.getNext = function(){
-		const nextXmlList = this.xml.getElementsByTagName("next");
+		const nextXmlList = getChildrenByTagName("next",this.xml);
 		if(nextXmlList.length === 0) return null;
 		const next = new NextDOM(nextXmlList[0]);
 		return next.getBlock();
@@ -404,4 +404,13 @@ function createComment(text,h,w,pinned){
 function getHashCode(string){
 	s = string.concat(Math.random());
 	return s.split("").reduce(function(a,b){a=((a<<5)-a)+b.charCodeAt(0);return a&a},0);
+}
+function getChildrenByTagName(tagName,xml){
+	const goodChildren = [];
+	for (let i = 0; i < xml.childNodes.length; i++){
+		const child = xml.childNodes[i];
+		if(child.tagName === tagName)
+			goodChildren.push(child);
+	}
+	return goodChildren;
 }

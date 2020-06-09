@@ -45,12 +45,12 @@ function GeneratorC(){
         function TaxonomyItem(taxonomyBlock) {
             const name = taxonomyBlock.getFieldsByName("name")[0].getText();
             const childrenList = [];
-
             const blockStatement = taxonomyBlock.getStatements()[0];
             if(blockStatement !== undefined){
-                const childNodes = blockStatement.getBlockList();
-                for (let i = 0; i < childNodes.length; i++){
-                    childrenList.push(new TaxonomyItem(childNodes[i]));
+                let block = blockStatement.getFirstBlock();
+                while(block !== null){
+                    childrenList.push(new TaxonomyItem(block));
+                    block = block.getNext();
                 }
             }
 
@@ -60,6 +60,51 @@ function GeneratorC(){
             this.getChildren = function(){
                 return childrenList;
             };
+        }
+        function DatamodelItem(datamodelBlock) {
+            const name = datamodelBlock.getFieldsByName("name")[0].getText();
+            const childrenList = [];
+            const propertyList = [];
+            const childStatement = datamodelBlock.getStatementsByName("children")[0];
+            if(childStatement !== undefined){
+                let block = childStatement.getFirstBlock();
+                while(block !== null){
+                    childrenList.push(new TaxonomyItem(block));
+                    block = block.getNext();
+                }
+            }
+            const propStatement = datamodelBlock.getStatementsByName("properties")[0];
+            if(propStatement !== undefined){
+                let block = propStatement.getFirstBlock();
+                while(block !== null){
+                    propertyList.push(new PropertyItem(block));
+                    block = block.getNext();
+                }
+            }
+
+            this.toString = function(){
+                return name + " : {";
+            };
+            this.getChildren = function(){
+                return childrenList;
+            };
+            this.getProperties = function(){
+                return propertyList;
+            }
+
+        }
+        function PropertyItem(propertyBlock) {
+            const name = propertyBlock.getFieldsByName("name")[0].getText();
+            let value;
+            try{
+                value = propertyBlock.getFieldsByName("value")[0].getText();
+            }catch(e){
+                value = "null";//TODO
+            }
+
+            this.toString = function(){
+                return name + " : " + value;
+            }
         }
 
         const ws = new BlocklyDOM(Blockly.Xml.workspaceToDom(workspace));
@@ -79,13 +124,21 @@ function GeneratorC(){
         }
         try {
             const taxonomyBlocks = ws.getBlocksByType("cm_taxonomy")[0].getStatementsByName("name")[0].getBlockList();
-            console.log(taxonomyBlocks.length);
-            for (let i = 0; i < taxonomyBlocks.length; i++){
+            for (let i = 0; i < taxonomyBlocks.length; i++) {
                 this.taxonomy.push(new TaxonomyItem(taxonomyBlocks[i]));
             }
         }catch(e){
             console.warn("Empty taxonomy?");
         }
+        try{
+            const datamodelBlocks = ws.getBlocksByType("cm_datamodel")[0].getStatementsByName("name")[0].getBlockList();
+            for (let i = 0; i < datamodelBlocks.length; i++) {
+                this.datamodel.push(new DatamodelItem(datamodelBlocks[i]));
+            }
+        }catch (e) {
+            console.warn("Empty data model?");
+        }
+
 
     }
     function dollGenerator(model) {
@@ -129,11 +182,51 @@ function GeneratorC(){
         }
         for (let i = 0; i < model.taxonomy.length; i++){
             taxonomyLines = taxonomyLines.concat(taxonomyLinesDFS(model.taxonomy[i],2));
-            console.log(model.taxonomy[i].getChildren()[0].toString());
         }
+        taxonomyLines.push("    },");
+
+        // Generate data model
+        let datamodelLines = [];
+        datamodelLines.push("    dataModel : {");
+        function datamodelLinesDFS (datamodel,tabNumber){
+            let tab = "";
+            for(let i=0;i<tabNumber;i++) tab = tab.concat("   ");
+            const tabs = tab;
+
+            let lines = [];
+
+            const children = datamodel.getChildren();
+            const properties = datamodel.getProperties();
+            if(children.length === 0 && properties.length === 0)
+                lines.push(tabs + datamodel.toString() + "},");
+            else{
+                lines.push(tabs + datamodel.toString());
+                for (let i = 0; i < children.length; i++){
+                    const childLines = taxonomyLinesDFS(children[i],tabNumber+1);
+                    lines = lines.concat(childLines);
+                }
+                if(properties.length !== null){
+                    lines.push(tabs+"property : {");
+                    for (let i = 0; i < properties.length; i++){
+                        lines.push(tabs + "   " +properties[i].toString());
+                    }
+                    lines.push(tabs+"}");
+                }
+
+                lines.push(tabs+"},");
+            }
+            return lines;
+        }
+        for (let i = 0; i < model.datamodel.length; i++){
+            datamodelLines =datamodelLines.concat(datamodelLinesDFS(model.datamodel[i],2));
+        }
+        datamodelLines.push("   }");
+
+        const endLines = ["}"];
 
 
-        return cmLines.concat(vocabularyLines,taxonomyLines);
+
+        return cmLines.concat(vocabularyLines,taxonomyLines,datamodelLines,endLines);
     }
 }
 
