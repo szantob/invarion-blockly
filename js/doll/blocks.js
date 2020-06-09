@@ -18,7 +18,7 @@ Blockly.Blocks['cm_vocabulary'] = {
     this.setTooltip("");
     this.setHelpUrl("");
     this.customContextMenu = function(options) {
-        options.push({text:"Add node",enabled:true,callback:onNewVocabularyEntry});
+        options.push({text:"Add Block",enabled:true,callback:onNewVocabularyEntry});
     };
     }
 };
@@ -32,7 +32,7 @@ Blockly.Blocks['cm_taxonomy'] = {
  this.setTooltip("");
  this.setHelpUrl("");
   this.customContextMenu = function(options) {
-      options.push({text:"Add node",enabled:true,callback:onNewTaxonomyEntry});
+      options.push({text:"Add Block",enabled:true,callback:onNewTaxonomyEntry});
   };
   }
 };
@@ -46,7 +46,7 @@ Blockly.Blocks['cm_datamodel'] = {
  this.setTooltip("");
  this.setHelpUrl("");
  this.customContextMenu = function(options) {
-      options.push({text:"Add node",enabled:true,callback:onNewDatamodelEntry});
+      options.push({text:"Add Block",enabled:true,callback:onNewDatamodelEntry});
   };
   }
 };
@@ -136,11 +136,11 @@ Blockly.Blocks['datamodel_node'] = {
       this.appendDummyInput()
           .appendField(new Blockly.FieldLabelSerializable(""), "name");
       this.appendStatementInput("children")
-          .setCheck('datamodel_item')
-          .appendField("children:");
+          .setCheck('datamodel_item');
+      this.appendDummyInput()
+          .appendField("properties:");
       this.appendStatementInput("properties")
           .setCheck('taxonomy_item')
-          .appendField("properties:");
       this.setPreviousStatement(true, "datamodel_item");
       this.setNextStatement(true, "datamodel_item");
       this.setColour(330);
@@ -151,7 +151,7 @@ Blockly.Blocks['datamodel_node'] = {
           const NodeId = this.id;
           const option1 = {};
           option1.enabled = true; //TODO
-          option1.text = "Add data model node";
+          option1.text = "Add data model Block";
           option1.callback = this.menuCallbackFactory1(NodeId);
           options.push(option1);
           const option2 = {};

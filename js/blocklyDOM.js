@@ -112,7 +112,7 @@ function BlockDOM(blockXml) {
 	},*/
 	//Field functions
 	this.getFields = function() {
-		const fieldXmlList = this.xml.getElementsByTagName("field");
+		const fieldXmlList = getChildrenByTagName("field",this.xml);
 		const fieldDOMList = [];
 		for(let i = 0; i < fieldXmlList.length; i++)
 			fieldDOMList.push(new FieldDOM(fieldXmlList[i]));
@@ -146,7 +146,7 @@ function BlockDOM(blockXml) {
 	};
 	// Statement functions
 	this.getStatements = function(){
-		const statementXmlList = this.xml.getElementsByTagName("statement");
+		const statementXmlList = getChildrenByTagName("statement",this.xml);
 		const statementDOMList = [];
 		for(let i = 0; i < statementXmlList.length; i++)
 			statementDOMList.push(new StatementDOM(statementXmlList[i]));
@@ -180,12 +180,12 @@ function BlockDOM(blockXml) {
 	};
 	// Comment functions
 	this.getComment = function(){
-		const commentXmlList = this.xml.getElementsByTagName("comment");
+		const commentXmlList = getChildrenByTagName("comment",this.xml);
 		if(commentXmlList.length === 0) return null;
 		return new CommentDOM(commentXmlList[0]);
 	};
 	this.removeComment = function(){
-		const commentXmlList = this.xml.getElementsByTagName("comment");
+		const commentXmlList = getChildrenByTagName("comment",this.xml);
 		if(commentXmlList.length === 0) return null;
 		this.xml.removeChild(commentXmlList[0]);
 	};

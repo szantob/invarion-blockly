@@ -212,7 +212,6 @@ function onInit(){
 }
 
 function onNewVocabularyEntry(){
-    Vocabulary.load();
 	const itemName = prompt("New vocabulary entry name:", "Thing");
 	if (itemName == null || itemName === ""){
 		return;

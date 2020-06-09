@@ -69,7 +69,7 @@ function GeneratorC(){
             if(childStatement !== undefined){
                 let block = childStatement.getFirstBlock();
                 while(block !== null){
-                    childrenList.push(new TaxonomyItem(block));
+                    childrenList.push(new DatamodelItem(block));
                     block = block.getNext();
                 }
             }
@@ -160,7 +160,7 @@ function GeneratorC(){
         // Generate taxonomy
         let taxonomyLines = [];
         taxonomyLines.push("    taxonomy : {");
-        function taxonomyLinesDFS (taxonomy,tabNumber){
+        function taxonomyLinesDFS (taxonomy,tabNumber,isLast){
             let tab = "";
             for(let i=0;i<tabNumber;i++) tab = tab.concat("   ");
             const tabs = tab;
@@ -168,27 +168,32 @@ function GeneratorC(){
             let lines = [];
 
             const children = taxonomy.getChildren();
-            if(children.length === 0)
+            if(children.length === 0 && isLast)
+                lines.push(tabs + taxonomy.toString() + "}");
+            else if(children.length === 0 && !isLast)
                 lines.push(tabs + taxonomy.toString() + "},");
             else{
                 lines.push(tabs + taxonomy.toString());
                 for (let i = 0; i < children.length; i++){
-                    const childLines = taxonomyLinesDFS(children[i],tabNumber+1);
+                    const last = i === children.length - 1;
+                    const childLines = taxonomyLinesDFS(children[i],tabNumber+1,last);
                     lines = lines.concat(childLines);
                 }
-                lines.push(tabs+"},");
+                if(isLast) lines.push(tabs+"}");
+                else lines.push(tabs+"},");
             }
             return lines;
         }
         for (let i = 0; i < model.taxonomy.length; i++){
-            taxonomyLines = taxonomyLines.concat(taxonomyLinesDFS(model.taxonomy[i],2));
+            const last = i === model.taxonomy.length - 1;
+            taxonomyLines = taxonomyLines.concat(taxonomyLinesDFS(model.taxonomy[i],2,last));
         }
         taxonomyLines.push("    },");
 
         // Generate data model
         let datamodelLines = [];
         datamodelLines.push("    dataModel : {");
-        function datamodelLinesDFS (datamodel,tabNumber){
+        function datamodelLinesDFS (datamodel,tabNumber,isLast){
             let tab = "";
             for(let i=0;i<tabNumber;i++) tab = tab.concat("   ");
             const tabs = tab;
@@ -198,27 +203,34 @@ function GeneratorC(){
             const children = datamodel.getChildren();
             const properties = datamodel.getProperties();
             if(children.length === 0 && properties.length === 0)
-                lines.push(tabs + datamodel.toString() + "},");
+                if(isLast) lines.push(tabs + datamodel.toString() + "}");
+                else lines.push(tabs + datamodel.toString() + "},");
             else{
                 lines.push(tabs + datamodel.toString());
                 for (let i = 0; i < children.length; i++){
-                    const childLines = taxonomyLinesDFS(children[i],tabNumber+1);
+                    const last = (i === children.length - 1) && properties.length === 0;
+                    const childLines = datamodelLinesDFS(children[i],tabNumber+1,last);
                     lines = lines.concat(childLines);
                 }
                 if(properties.length !== null){
-                    lines.push(tabs+"property : {");
+                    lines.push(tabs+"   property : {");
                     for (let i = 0; i < properties.length; i++){
-                        lines.push(tabs + "   " +properties[i].toString());
+                        if(properties.length - 1 === i)
+                            lines.push(tabs + "      " +properties[i].toString());
+                        else
+                            lines.push(tabs + "      " +properties[i].toString()+",");
                     }
-                    lines.push(tabs+"}");
+                    lines.push(tabs+"   }");
                 }
 
-                lines.push(tabs+"},");
+                if(isLast) lines.push(tabs+"}");
+                else lines.push(tabs+"},");
             }
             return lines;
         }
         for (let i = 0; i < model.datamodel.length; i++){
-            datamodelLines =datamodelLines.concat(datamodelLinesDFS(model.datamodel[i],2));
+            const last = i === model.datamodel.length - 1;
+            datamodelLines = datamodelLines.concat(datamodelLinesDFS(model.datamodel[i],2,last));
         }
         datamodelLines.push("   }");
 
