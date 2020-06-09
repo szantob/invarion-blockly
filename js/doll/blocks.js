@@ -12,7 +12,7 @@ Blockly.Blocks['cm_vocabulary'] = {
     init: function() {
     this.appendDummyInput()
         .appendField("Vocabulary: ");
-    this.appendStatementInput("name")
+    this.appendStatementInput("name")   //TODO CHANGE
         .setCheck('vocabulary_item');
     this.setColour(230);
     this.setTooltip("");

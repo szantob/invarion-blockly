@@ -317,6 +317,8 @@ function onGenerate(){
     for(let i=0;i<msgs.warnings.length;i++){
         console.warn(msgs.warnings[i]);
     }
+
+    Generator.generate();
 }
 
 function DOMTEST(wsXml){
