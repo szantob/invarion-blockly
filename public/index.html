@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Doll Editor</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="./css/style.css">
+
+  <script src="./js/blockly/blockly_compressed.js"></script>
+  <script src="./js/blockly/blocks_compressed.js"></script>
+  <script src="./js/blockly/msg/js/en.js"></script>
+  <script src="./js/doll/blocks.js"></script>
+  <script src="./js/doll/toolbox.js"></script>
+  <script src="./js/doll/generator.js"></script>
+  <script src="./js/blocklyDOM.js"></script>
+  <script src="./js/main.js"></script>
+</head>
+<body>
+<nav class="navbar">
+  <div class="dropdown">
+    <button class="dropbtn">File
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <button onclick="onInit()">New</button>
+      <button onclick="onOpen()">Open</button>
+      <button onclick="onSave()">Save</button>
+      <button onclick="onDownload()">Download</button>
+      <button onclick="onDownload()">Upload</button>
+    </div>
+  </div>
+  <div class="dropdown">
+    <button class="dropbtn">Edit
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <button onclick="onUndo()">Undo</button>
+      <button onclick="onRedo()">Redo</button>
+    </div>
+  </div>
+  <div class="dropdown">
+    <button class="dropbtn">Model
+      <i class="fa fa-caret-down"></i>
+    </button>
+    <div class="dropdown-content">
+      <button onclick="onNewVocabularyEntry()">New Vocabulary entry</button>
+      <button onclick="onNewTaxonomyEntry()">New Taxonomy entry</button>
+      <button onclick="onNewDatamodelEntry()">New Data Model entry</button>
+    </div>
+  </div>
+</nav>
+<main class="row">
+  <div id="blocklyArea">
+    <div id="blocklyDiv" style="height: 650px; width: 1280px;">
+      <xml id="toolbox" style="display: none">
+        <category name="Concept Model Blocks"></category>
+      </xml>
+    </div>
+</div>
+</main>
+
+<footer class="footer">
+  <h2>Footer</h2>
+</footer>
+
+<script>
+  const toolbox = document.getElementById("toolbox");
+  const options = {
+    toolbox : toolbox,
+    collapse : true,
+    comments : true,
+    disable : true,
+    maxBlocks : Infinity,
+    trashcan : true,
+    horizontalLayout : false,
+    toolboxPosition : 'start',
+    css : true,
+    media : 'https://blockly-demo.appspot.com/static/media/',
+    rtl : false,
+    scrollbars : true,
+    sounds : true,
+    oneBasedIndex : true
+  };
+  const blocklyArea = document.getElementById('blocklyArea');
+  const blocklyDiv = document.getElementById('blocklyDiv');
+  const workspace = Blockly.inject(blocklyDiv,{toolbox: document.getElementById('toolbox')});
+
+  var onresize = function(e) {
+    // Compute the absolute coordinates and dimensions of blocklyArea.
+    var element = blocklyArea;
+    var x = 0;
+    var y = 0;
+    do {
+      x += element.offsetLeft;
+      y += element.offsetTop;
+      element = element.offsetParent;
+    } while (element);
+    // Position blocklyDiv over blocklyArea.
+    blocklyDiv.style.left = x + 'px';
+    blocklyDiv.style.top = y + 'px';
+    blocklyDiv.style.width = blocklyArea.offsetWidth + 'px';
+    blocklyDiv.style.height = blocklyArea.offsetHeight + 'px';
+    Blockly.svgResize(workspace);
+  };
+  window.addEventListener('resize', onresize, false);
+  onresize();
+  Blockly.svgResize(workspace);
+  window.onload = function(){
+    onLoad();
+  };
+
+</script>
+</body>
+</html>
