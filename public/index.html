@@ -10,6 +10,7 @@
   <script src="./js/blockly/blocks_compressed.js"></script>
   <script src="./js/blockly/msg/js/en.js"></script>
   <script src="./js/doll/blocks.js"></script>
+  <script src="./js/doll/dollBlockly.js"></script>
   <script src="./js/doll/toolbox.js"></script>
   <script src="./js/doll/generator.js"></script>
   <script src="./js/blocklyDOM.js"></script>
@@ -26,7 +27,7 @@
       <button onclick="onOpen()">Open</button>
       <button onclick="onSave()">Save</button>
       <button onclick="onDownload()">Download</button>
-      <button onclick="onDownload()">Upload</button>
+      <button onclick="onUpload()">Upload</button>
     </div>
   </div>
   <div class="dropdown">
@@ -46,17 +47,16 @@
       <button onclick="onNewVocabularyEntry()">New Vocabulary entry</button>
       <button onclick="onNewTaxonomyEntry()">New Taxonomy entry</button>
       <button onclick="onNewDatamodelEntry()">New Data Model entry</button>
+      <button onclick="onGenerate()">Generate DOLL</button>
     </div>
   </div>
 </nav>
-<main class="row">
-  <div id="blocklyArea">
-    <div id="blocklyDiv" style="height: 650px; width: 1280px;">
-      <xml id="toolbox" style="display: none">
-        <category name="Concept Model Blocks"></category>
-      </xml>
-    </div>
-</div>
+<main class="row" id="blocklyArea">
+  <div id="blocklyDiv" style="height: 650px; width: 1280px;">
+    <xml id="toolbox" style="display: none">
+      <category name="Concept Model Blocks"></category>
+    </xml>
+  </div>
 </main>
 
 <footer class="footer">
