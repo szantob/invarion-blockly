@@ -10,10 +10,18 @@ function getVocabulary(){
 }
 function getLetterCategory(letter){
     let xmlText ='<category name="'+letter+'">';
-    //TODO entries
+    const entries= Vocabulary.getCategoryEntries(letter);
+    for(let i = 0; i < entries.length; i++){
+        xmlText = xmlText.concat('<category name="'+entries[i].name+'">');
+        xmlText = xmlText.concat(getConceptModelBlocksForName(entries[i].name));
+        xmlText = xmlText.concat('</category>');
+    }
 
     xmlText = xmlText.concat('</category>');
     return xmlText
+}
+function getConceptModelBlocksForName(name){
+
 }
 function toolboxUpdate(){
     let xmlText = '<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">';
