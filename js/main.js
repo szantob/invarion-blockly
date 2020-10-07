@@ -9,7 +9,7 @@ function RootNode(type,ctype,x,y,iterator,collapse){
     this.ws = {};
 
     this.load = function(){
-        this.ws = new BlocklyDOM(Blockly.Xml.workspaceToDom(workspace));
+        this.ws = new WorkspaceDOM(Blockly.Xml.workspaceToDom(workspace));
         return this;
     };
     this.commit = function(){

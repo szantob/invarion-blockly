@@ -26,7 +26,7 @@ function getConceptModelBlocksForName(name){
         '<block type="property_node"><field name="name">' + name + '</field></block>';
 }
 function toolboxUpdate(){
-    let xmlText = '<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">';
+    let xmlText = '<xml xmlns="https://developers.google.com/Blockly/xml" id="toolbox" style="display: none">';
     xmlText = xmlText.concat(getVocabulary());
     xmlText = xmlText.concat('</xml>');
     workspace.updateToolbox(xmlText);
