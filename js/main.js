@@ -241,10 +241,6 @@ function onNewTaxonomyTreeEntry(parentId){
         return;
     }
     Taxonomy.load().addToChild(parentId, itemName).commit();
-
-    if(!Vocabulary.load().includes(itemName)){
-        Vocabulary.addBlock(itemName).commit();
-    }
 }
 function onNewDatamodelDataTreeEntry(parentId){
     const itemName = prompt("New data model entry name:", "Thing");

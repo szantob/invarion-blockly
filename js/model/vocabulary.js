@@ -21,6 +21,7 @@ class VocabularyClass{
         return this.letterCategories[category].entries
     }
     load(vocabularyTEXT){
+        if(vocabularyTEXT === undefined || vocabularyTEXT === null) return;
         const lineArray = vocabularyTEXT.split("\n");
         for(let i = 0; i < lineArray.length; i++){
             const splittedLine = lineArray[i].split(":");
