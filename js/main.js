@@ -173,7 +173,6 @@ function onSave(){
 	console.log(wsXml); //TODO DEBUG
 }
 function onLoad(){
-	workspace.registerButtonCallback('vocabularyNewEntry', onNewVocabularyEntry);
 	workspace.registerButtonCallback('taxonomyNewEntry', onNewTaxonomyEntry);
 
 	const xml_text = window.localStorage.getItem('workspaceSave');
@@ -195,10 +194,6 @@ function onInit(){
     wsDOM.add(nameBlock);
     wsXml = wsDOM.toXml();
     Blockly.Xml.domToWorkspace(wsXml, workspace);
-
-    Vocabulary.load();
-    Vocabulary.getRootBlock();
-    Vocabulary.commit();
 
     Taxonomy.load();
     Taxonomy.getRootBlock();
@@ -222,9 +217,6 @@ function onNewTaxonomyEntry(){
 
     Taxonomy.addBlock(itemName).commit();
 
-    if(!Vocabulary.load().includes(itemName)){
-        Vocabulary.addBlock(itemName).commit();
-    }
 }
 function onNewDatamodelEntry() {
     Datamodel.load();
@@ -238,9 +230,6 @@ function onNewDatamodelEntry() {
     }
     Datamodel.addBlock(itemName).commit();
 
-    if(!Vocabulary.load().includes(itemName)){
-        Vocabulary.addBlock(itemName).commit();
-    }
 }
 function onNewTaxonomyTreeEntry(parentId){
     const itemName = prompt("New taxonomy entry name:", "Thing");
@@ -268,9 +257,6 @@ function onNewDatamodelDataTreeEntry(parentId){
     }
     Datamodel.load().addToChild(parentId, itemName).commit();
 
-    if(!Vocabulary.load().includes(itemName)){
-        Vocabulary.addBlock(itemName).commit();
-    }
 }
 function onNewProperty(nodeId){
     const itemName = prompt("New Property name:", "Thing");
@@ -280,9 +266,6 @@ function onNewProperty(nodeId){
     Datamodel.load().addToChild(nodeId, itemName, "properties", "taxonomy_item", false).commit();
     if(!Taxonomy.load().includes(itemName))
         Taxonomy.addBlock(itemName).commit();
-    if(!Vocabulary.load().includes(itemName))
-        Vocabulary.addBlock(itemName).commit();
-
 }
 
 function onDownload(){
