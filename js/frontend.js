@@ -17,7 +17,6 @@ var options = {
 	oneBasedIndex : true
 };
 var initialize = function(){
-	workspace.registerToolboxCategoryCallback('VOCABULARY', vocabularyCallback);
 	workspace.registerToolboxCategoryCallback('TAXONOMY', taxonomyCallback);
 	workspace.registerToolboxCategoryCallback('DATAMODEL', datamodelCallback);
 	workspace.registerButtonCallback('vocabularyNewEntry', vocabularyNewEntryCallback);

@@ -8,20 +8,6 @@ Blockly.Blocks['cm_name'] = {
  this.setHelpUrl("");
   }
 };
-Blockly.Blocks['cm_vocabulary'] = {
-    init: function() {
-    this.appendDummyInput()
-        .appendField("Vocabulary: ");
-    this.appendStatementInput("name")   //TODO CHANGE
-        .setCheck('vocabulary_item');
-    this.setColour(230);
-    this.setTooltip("");
-    this.setHelpUrl("");
-    this.customContextMenu = function(options) {
-        options.push({text:"Add Block",enabled:true,callback:onNewVocabularyEntry});
-    };
-    }
-};
 Blockly.Blocks['cm_taxonomy'] = {
   init: function() {
     this.appendDummyInput()
@@ -49,45 +35,6 @@ Blockly.Blocks['cm_datamodel'] = {
       options.push({text:"Add Block",enabled:true,callback:onNewDatamodelEntry});
   };
   }
-};
-
-Blockly.Blocks['vocabulary_node'] = {
-    init: function() {
-        this.appendDummyInput()
-            .appendField(new Blockly.FieldLabelSerializable(""), "name")
-            .appendField(":")
-            .appendField(new Blockly.FieldTextInput("description"), "description");
-        this.setInputsInline(true);
-        this.setPreviousStatement(true, 'vocabulary_item');
-        this.setNextStatement(true, 'vocabulary_item');
-        this.setColour(20);
-        this.setTooltip("");
-        this.setHelpUrl("");
-        this.customContextMenu = function(options) {
-            const NodeName = this.getField('name').value_;
-            const option1 = {};
-            option1.enabled = true;
-            option1.text = "Add to taxonomy";
-            option1.callback = this.menu1CallbackFactory(NodeName);
-            const option2 = {};
-            option2.enabled = true;
-            option2.text = "Add to data model";
-            option2.callback = this.menu2CallbackFactory(NodeName);
-
-            options.push(option1);
-            options.push(option2);
-        };
-    },
-    menu1CallbackFactory: function(name){
-        return function () {
-            addBlockToTaxonomy(name)
-        };
-    },
-    menu2CallbackFactory: function(name){
-        return function () {
-            addBlockToDatamodel(name);
-        };
-    }
 };
 
 Blockly.Blocks['taxonomy_node'] = {

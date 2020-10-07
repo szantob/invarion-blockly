@@ -103,8 +103,6 @@ function VocabularyIterator (firstNode){
         return true;
     }
 }
-const Vocabulary = new RootNode("cm_vocabulary","vocabulary_node",20,50,VocabularyIterator,false);
-
 function taxonomyDFS(taxonomyBlock){
     let taxonomyBlockList =[];
     taxonomyBlockList.push(taxonomyBlock);
@@ -211,18 +209,6 @@ function onInit(){
     Datamodel.commit();
 }
 
-function onNewVocabularyEntry(){
-	const itemName = prompt("New vocabulary entry name:", "Thing");
-	if (itemName == null || itemName === ""){
-		return;
-	}
-	if(Vocabulary.includes(itemName)){
-		alert("Vocabulary entry with name \"" + itemName +"\" already exist.");
-		return;
-	}
-
-	Vocabulary.addBlock(itemName).commit();
-}
 function onNewTaxonomyEntry(){
     Taxonomy.load();
     const itemName = prompt("New taxonomy entry name:", "Thing");
