@@ -21,7 +21,9 @@ function getLetterCategory(letter){
     return xmlText
 }
 function getConceptModelBlocksForName(name){
-
+    return ""+
+        '<block type="taxonomy_node"><field name="name">' + name + '</field></block>'+
+        '<block type="property_node"><field name="name">' + name + '</field></block>';
 }
 function toolboxUpdate(){
     let xmlText = '<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">';
