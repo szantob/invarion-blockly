@@ -1,24 +1,26 @@
-function RootNode(type,ctype,x,y,iterator,collapse){
-    this.id= type;
-    this.childType = ctype;
-    this.defX = x;
-    this.defY = y;
-    this.iterator = iterator;
-    this.collapse = collapse;
+class RootNode{
+    constructor(type,ctype,x,y,iterator,collapse) {
+        this.id = type;
+        this.childType = ctype;
+        this.defX = x;
+        this.defY = y;
+        this.iterator = iterator;
+        this.collapse = collapse;
 
-    this.ws = {};
+        this.ws = {};
+    }
 
-    this.load = function(){
+    load(){
         this.ws = new WorkspaceDOM(Blockly.Xml.workspaceToDom(workspace));
         return this;
     };
-    this.commit = function(){
+    commit(){
         workspace.clear();
         Blockly.Xml.domToWorkspace(this.ws.toXml(), workspace);
         toolboxUpdate();
     };
 
-    this.getRootBlock = function(){
+    getRootBlock(){
         let block =  this.ws.getBlockById(this.id);
         if(block === null){
             block  = createBlock(this.id,this.id);
@@ -27,7 +29,7 @@ function RootNode(type,ctype,x,y,iterator,collapse){
         }
         return block;
     };
-    this.getRootStatement = function() {
+    getRootStatement() {
         const rootBlock = this.getRootBlock(this.ws);
         let statement = rootBlock.getStatements()[0];
         if(statement === undefined){
@@ -37,7 +39,7 @@ function RootNode(type,ctype,x,y,iterator,collapse){
         return statement;
     };
 
-    this.addBlock = function(name){
+    addBlock(name){
         const statement = this.getRootStatement(this.ws);
         const block = createBlock(this.childType,getHashCode(this.childType));
         block.addField(createField("name",name));
@@ -45,7 +47,7 @@ function RootNode(type,ctype,x,y,iterator,collapse){
         statement.push(block);
         return this;
     };
-    this.addToChild = function (childId, name, statement, type, collapse){
+    addToChild(childId, name, statement, type, collapse){
         if(statement === undefined) statement = "children";
         if(type === undefined) type = this.childType;
         if(collapse === undefined) collapse = this.collapse;
@@ -66,13 +68,13 @@ function RootNode(type,ctype,x,y,iterator,collapse){
         return this;
     };
 
-    this.includes = function(name){
+    includes(name){
         const entryList = this.getEntryList();
         if((entryList!=null) && (entryList.includes(name))) return true;
         return false;
     };
 
-    this.getEntryList = function(){
+    getEntryList(){
         const rootBlock = this.ws.getBlockById(this.id);
         if(rootBlock === null) return [];
         const rootStatement = rootBlock.getStatements()[0];
@@ -90,19 +92,6 @@ function RootNode(type,ctype,x,y,iterator,collapse){
     }
 }
 
-function VocabularyIterator (firstNode){
-    this.node = firstNode;
-
-    this.get = function(){
-        return this.node;
-    };
-    this.next = function(){
-        const nextNode = this.node.getNext();
-        if(nextNode === null) return false;
-        this.node = nextNode;
-        return true;
-    }
-}
 function taxonomyDFS(taxonomyBlock){
     let taxonomyBlockList =[];
     taxonomyBlockList.push(taxonomyBlock);
@@ -164,3 +153,34 @@ function DatamodelIterator (firstNode){
 }
 const Datamodel = new RootNode("cm_datamodel","datamodel_node",420,50,DatamodelIterator,true);
 const Taxonomy = new RootNode("cm_taxonomy","taxonomy_node",20,50,TaxonomyIterator,true);
+
+
+class AbstractConceptModelNode{
+    constructor(xml,parent){
+        this.xml = xml;
+        this.dom = new BlockDOM(xml,parent);
+    }
+}
+class AbstractParentNode extends AbstractConceptModelNode{
+    getChildren(){
+        dom.getStatements();
+    }
+    addChild(){
+
+    }
+    removeChild(){
+
+    }
+}
+
+class TaxonomyNode extends AbstractParentNode{
+    getName(){
+
+    }
+    setName(){
+
+    }
+    getProperties(){
+
+    }
+}
