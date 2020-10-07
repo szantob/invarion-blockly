@@ -13,7 +13,7 @@ Blockly.Blocks['cm_taxonomy'] = {
     this.appendDummyInput()
         .appendField("Taxonomy: ");
     this.appendStatementInput("name")
-        .setCheck('taxonomy_item');
+        .setCheck("taxonomyNode");
     this.setColour(230);
  this.setTooltip("");
  this.setHelpUrl("");
@@ -36,48 +36,48 @@ Blockly.Blocks['cm_datamodel'] = {
   };
   }
 };
-
 Blockly.Blocks['taxonomy_node'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldLabelSerializable(""), "name");
-    this.appendStatementInput("children")
-        .setCheck('taxonomy_item');
-    this.setPreviousStatement(true, 'taxonomy_item');
-    this.setNextStatement(true, 'taxonomy_item');
-    this.setColour(120);
- this.setTooltip("");
- this.setHelpUrl("");
-      this.customContextMenu = function(options) {
-          const NodeId = this.id;
-          const option = {};
-          option.enabled = true; //TODO
-          option.text = "Add node";
-          option.callback = this.menuCallbackFactory(NodeId);
-          options.push(option);
-      };
-  },
-    menuCallbackFactory: function(id){
+    init: function() {
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldLabelSerializable("NAME"), "name");
+        this.appendStatementInput("children")
+            .setCheck(["taxonomyNode", "propertyNode"]);
+        this.setPreviousStatement(true, ["taxonomyNode", "propertyNode"]);
+        this.setNextStatement(true, ["taxonomyNode", "propertyNode"]);
+        this.setColour(120);
+        this.setTooltip("");    //TODO
+        this.setHelpUrl("");    //TODO
+        this.customContextMenu = function(options) {
+            const NodeId = this.id;
+            const option1 = {
+                enabled : true,
+                text    : "Add Child",
+                callback: this.menuCallbackFactory1(NodeId)
+            };
+            options.push(option1);
+            const option2 = {
+                enabled : true,
+                text    : "Add Property",
+                callback: this.menuCallbackFactory2(NodeId)
+            };
+            options.push(option2);
+        };
+    },
+    menuCallbackFactory1: function(id){
         return function () {
             onNewTaxonomyTreeEntry(id);
         };
+    },
+    menuCallbackFactory2: function(id){
+        return function () {
+            onNewTaxonomyTreePrpoerty(id);
+        };
     }
 };
-Blockly.Blocks['taxonomy_item'] = {
-  init: function() {
-      this.appendDummyInput()
-          .appendField(new Blockly.FieldLabelSerializable(""), "name")
-          .appendField(":")
-          .appendField(new Blockly.FieldTextInput("value"), "value");
-    this.setInputsInline(true);
-    this.setPreviousStatement(true, 'taxonomy_item');
-    this.setNextStatement(true, 'taxonomy_item');
-    this.setColour(120);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
-};
 
+
+
+/*
 Blockly.Blocks['datamodel_node'] = {
   init: function() {
       this.appendDummyInput()
@@ -119,18 +119,6 @@ Blockly.Blocks['datamodel_node'] = {
         };
     }
 };
-Blockly.Blocks['datamodel_reference'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField("* ")
-        .appendField(new Blockly.FieldLabelSerializable(""), "name");
-    this.setPreviousStatement(true, "datamodel_item");
-    this.setNextStatement(true, "datamodel_item");
-    this.setColour(330);
-	this.setTooltip("");
-	this.setHelpUrl("");
-	}
-};
 Blockly.Blocks['datamodel_node_ref'] = {
   init: function() {
     this.appendDummyInput()
@@ -145,4 +133,4 @@ Blockly.Blocks['datamodel_node_ref'] = {
  this.setTooltip("");
  this.setHelpUrl("");
   }
-};
+};*/
