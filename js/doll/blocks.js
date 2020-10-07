@@ -75,7 +75,32 @@ Blockly.Blocks['taxonomy_node'] = {
     }
 };
 
-
+Blockly.Blocks['property_node'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldLabelSerializable("NAME"), "name");
+        this.appendDummyInput()
+            .appendField("type:")
+            .appendField(new Blockly.FieldDropdown([["String","string"], ["Reference","reference"], ["Integer","integer"], ["Date","date"], ["Float","float"], ["RegularExpression","regex"], ["Record","record"]]), "type");
+        this.appendDummyInput()
+            .appendField("value:")
+            .appendField(new Blockly.FieldTextInput("Value"), "value");
+        this.appendDummyInput()
+            .appendField("unit:")
+            .appendField(new Blockly.FieldTextInput("Unit"), "unit");
+        this.appendDummyInput()
+            .appendField("range:")
+            .appendField(new Blockly.FieldTextInput("Range"), "range");
+        this.appendDummyInput()
+            .appendField("enum:")
+            .appendField(new Blockly.FieldTextInput("Enum"), "enum");
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
+        this.setColour(230);
+        this.setTooltip("ISA");
+        this.setHelpUrl("");
+    }
+};
 
 /*
 Blockly.Blocks['datamodel_node'] = {
