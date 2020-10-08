@@ -20,14 +20,14 @@ function getLetterCategory(letter, vocabularyCategory){
     vocabularyCategory.addCategory(letterCategory);
 }
 function getConceptModelBlocksForName(name, category){
-    const nameField = ToolboxFieldDOM.create("name",name);
-
     const taxonomyBlock = ToolboxBlockDOM.create("taxonomy_node");
-    taxonomyBlock.addField(nameField);
+    const nameFieldT = ToolboxFieldDOM.create("name",name);
+    taxonomyBlock.addField(nameFieldT);
     category.addBlock(taxonomyBlock);
 
     const propertyBlock = ToolboxBlockDOM.create("property_node");
-    propertyBlock.addField(nameField);
+    const nameFieldP = ToolboxFieldDOM.create("name",name);
+    propertyBlock.addField(nameFieldP);
     category.addBlock(propertyBlock);
 }
 function toolboxUpdate(){
