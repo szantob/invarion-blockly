@@ -23,7 +23,7 @@ class RootNode{
     getRootBlock(){
         let block =  this.ws.getBlockById(this.id);
         if(block === null){
-            block  = createBlock(this.id,this.id);
+            block  = BlockDOM.create(this.id,this.id);
             block .setPos(this.defX,this.defY);
             this.ws.add(block);
         }
@@ -33,7 +33,7 @@ class RootNode{
         const rootBlock = this.getRootBlock(this.ws);
         let statement = rootBlock.getStatements()[0];
         if(statement === undefined){
-            statement = createStatement("name");
+            statement = StatementDOM.create("name");
             rootBlock.addStatement(statement);
         }
         return statement;
@@ -41,8 +41,8 @@ class RootNode{
 
     addBlock(name){
         const statement = this.getRootStatement(this.ws);
-        const block = createBlock(this.childType,getHashCode(this.childType));
-        block.addField(createField("name",name));
+        const block = BlockDOM.create(this.childType,getHashCode(this.childType));
+        block.addField(FieldDOM.create("name",name));
         block.setCollapsed(this.collapse);
         statement.push(block);
         return this;
@@ -57,12 +57,12 @@ class RootNode{
 
         let childrenStatement = rootBlock.getStatementsByName(statement)[0];
         if(childrenStatement === undefined){
-            childrenStatement = createStatement(statement);
+            childrenStatement = StatementDOM.create(statement);
             rootBlock.addStatement(childrenStatement);
         }
 
-        const block = createBlock(type,getHashCode(type));
-        block.addField(createField("name",name));
+        const block = BlockDOM.create(type,getHashCode(type));
+        block.addField(FieldDOM.create("name",name));
         block.setCollapsed(collapse);
         childrenStatement.push(block);
         return this;

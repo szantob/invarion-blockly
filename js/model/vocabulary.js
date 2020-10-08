@@ -14,7 +14,9 @@ class VocabularyClass{
     }
     add(name, description){
         const category = name.charCodeAt(0) - 'A'.charCodeAt(0);
-        this.letterCategories[category].entries.push(new VocabularyEntry(name,description))
+        const categoryArray = this.letterCategories[category].entries;
+        categoryArray.push(new VocabularyEntry(name,description));
+        categoryArray.sort();   //TODO not working
     }
     getCategoryEntries(letter){
         const category = letter.charCodeAt(0) - 'A'.charCodeAt(0);
@@ -32,20 +34,35 @@ class VocabularyClass{
             this.add(entryName,entryDesc);
         }
     }
+    print(){
+        let printStr = "vocabulary : {\n";
+        for(let i = 0; i < this.letterCategories.length; i++){
+            const letterCategoryArray = this.letterCategories[i].entries;
+            for(let j = 0; j < letterCategoryArray.length; j++){
+                const vocabularyEntry = letterCategoryArray[j];
+                printStr = printStr.concat("\t" + vocabularyEntry.name + ":" + vocabularyEntry.desc + "\n");
+            }
+        }
+        printStr = printStr.concat("}\n");
+        return printStr;
+    }
 }
 const Vocabulary = new VocabularyClass();
 
 const TestTEXT=     //TODO Dynamic
 "  Accept:\"\"                  \n" +
     "    Administrator:\"\"           \n" +
-    "    Age:\"\"  \n" +
-    "    Albania:\"\"                 \n" +
-    "    Algeria:\"\"                 \n" +
     "    Analyst:\"\"                 \n" +
     "    Andorra:\"\"                 \n" +
     "    Argentina:\"\"               \n" +
+    "    Age:\"\"  \n" +
+    "    Albania:\"\"                 \n" +
+    "    Algeria:\"\"                 \n" +
     "    Artist:\"\"                  \n" +
     "    Australia:\"\"               \n" +
+    "    Cancel:\"\"                  \n" +
+    "    CarbonCopyAddress:\"\"       \n" +
+    "    China:\"\"                   \n" +
     "    Austria:\"\"                 \n" +
     "    Bahamas:\"\"                 \n" +
     "    Bahrain:\"\"                 \n" +
@@ -62,9 +79,6 @@ const TestTEXT=     //TODO Dynamic
     "    Bulgaria:\"\"                \n" +
     "    Burma:\"\"                   \n" +
     "    Canada:\"\"                  \n" +
-    "    Cancel:\"\"                  \n" +
-    "    CarbonCopyAddress:\"\"       \n" +
-    "    China:\"\"                   \n" +
     "    City:\"\" \n" +
     "    Close:\"\"                   \n" +
     "    ConfirmPassword:\"\"         \n" +

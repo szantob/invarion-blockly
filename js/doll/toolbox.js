@@ -1,33 +1,37 @@
-function getVocabulary(){
-    let xmlText ='<category name="Vocabulary">';
+function getVocabulary(toolbox){
+    const vocabularyCat = ToolboxCategoryDOM.create("Vocabulary");
 
     for(let i = 97; i < 123;){
-        const letter = ''+String.fromCharCode(i++).toUpperCase()
-        xmlText = xmlText.concat(getLetterCategory(letter));
+        const letter = ''+String.fromCharCode(i++).toUpperCase();
+
+        getLetterCategory(letter, vocabularyCat);
     }
-    xmlText = xmlText.concat('</category>');
-    return xmlText
+    toolbox.addCategory(vocabularyCat);
 }
-function getLetterCategory(letter){
-    let xmlText ='<category name="'+letter+'">';
+function getLetterCategory(letter, vocabularyCategory){
+    const letterCategory = ToolboxCategoryDOM.create(letter);
+
     const entries= Vocabulary.getCategoryEntries(letter);
     for(let i = 0; i < entries.length; i++){
-        xmlText = xmlText.concat('<category name="'+entries[i].name+'">');
-        xmlText = xmlText.concat(getConceptModelBlocksForName(entries[i].name));
-        xmlText = xmlText.concat('</category>');
+        const vocabularyItemCategory = ToolboxCategoryDOM.create(entries[i].name);
+        getConceptModelBlocksForName(entries[i].name,vocabularyItemCategory);
+        letterCategory.addCategory(vocabularyItemCategory);
     }
-
-    xmlText = xmlText.concat('</category>');
-    return xmlText
+    vocabularyCategory.addCategory(letterCategory);
 }
-function getConceptModelBlocksForName(name){
-    return ""+
-        '<block type="taxonomy_node"><field name="name">' + name + '</field></block>'+
-        '<block type="property_node"><field name="name">' + name + '</field></block>';
+function getConceptModelBlocksForName(name, category){
+    const nameField = ToolboxFieldDOM.create("name",name);
+
+    const taxonomyBlock = ToolboxBlockDOM.create("taxonomy_node");
+    taxonomyBlock.addField(nameField);
+    category.addBlock(taxonomyBlock);
+
+    const propertyBlock = ToolboxBlockDOM.create("property_node");
+    propertyBlock.addField(nameField);
+    category.addBlock(propertyBlock);
 }
 function toolboxUpdate(){
-    let xmlText = '<xml xmlns="https://developers.google.com/Blockly/xml" id="toolbox" style="display: none">';
-    xmlText = xmlText.concat(getVocabulary());
-    xmlText = xmlText.concat('</xml>');
-    workspace.updateToolbox(xmlText);
+    const toolbox = ToolboxDOM.create();
+    getVocabulary(toolbox);
+    workspace.updateToolbox(toolbox.toXml());
 }
