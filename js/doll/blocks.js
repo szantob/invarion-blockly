@@ -12,7 +12,7 @@ Blockly.Blocks['cm_taxonomy'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("Taxonomy: ");
-    this.appendStatementInput("name")
+    this.appendStatementInput("children")
         .setCheck("taxonomyNode");
     this.setColour(230);
  this.setTooltip("");
@@ -26,13 +26,13 @@ Blockly.Blocks['cm_datamodel'] = {
   init: function() {
     this.appendDummyInput()
         .appendField("Data Model: ");
-    this.appendStatementInput("name")
-        .setCheck('datamodel_item');
+    this.appendStatementInput("children")
+        .setCheck('datamodelNode');
     this.setColour(230);
  this.setTooltip("");
  this.setHelpUrl("");
  this.customContextMenu = function(options) {
-      options.push({text:"Add Block",enabled:true,callback:onNewDatamodelEntry});
+     options.push({text:"Add Block",enabled:true,callback:onNewDatamodelEntry});
   };
   }
 };
@@ -49,33 +49,74 @@ Blockly.Blocks['taxonomy_node'] = {
         this.setHelpUrl("");    //TODO
         this.customContextMenu = function(options) {
             const NodeId = this.id;
-            const option1 = {
-                enabled : true,
-                text    : "Add Child",
-                callback: this.menuCallbackFactory1(NodeId)
-            };
-            options.push(option1);
-            const option2 = {
-                enabled : true,
-                text    : "Add Property",
-                callback: this.menuCallbackFactory2(NodeId)
-            };
-            options.push(option2);
-        };
-    },
-    menuCallbackFactory1: function(id){
-        return function () {
-            onNewTaxonomyTreeEntry(id);
-        };
-    },
-    menuCallbackFactory2: function(id){
-        return function () {
-            onNewTaxonomyTreePrpoerty(id);
+            options.push({enabled:true,text:"Add Child",    callback:childCallbackFactory(NodeId,'taxonomy_node')});
+            options.push({enabled:true,text:"Add Property", callback:propertyCallbackFactory(NodeId)});
         };
     }
 };
+Blockly.Blocks['datamodel_node'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldLabelSerializable("NAME"), "name");
+        this.appendStatementInput("children")
+            .setCheck(["datamodelNode", "propertyNode"]);
+        this.setInputsInline(false);
+        this.setPreviousStatement(true, ["datamodelNode", "propertyNode"]);
+        this.setNextStatement(true, ["datamodelNode", "propertyNode"]);
+        this.setColour(230);
+        this.setTooltip("");
+        this.setHelpUrl("");
 
-Blockly.Blocks['property_node'] = {
+        this.customContextMenu = function(options) {
+            const NodeId = this.id;
+            options.push({enabled:true,text:"Add Child",    callback:childCallbackFactory(NodeId,'datamodel_node')});
+            options.push({enabled:true,text:"Add Property", callback:propertyCallbackFactory(NodeId)});
+        };
+    }
+};
+Blockly.Blocks['property_reference'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldLabelSerializable("NAME"), "name");
+        this.appendDummyInput()
+            .appendField("Reference:")
+            .appendField(new Blockly.FieldTextInput("Value"), "value");
+        this.setPreviousStatement(true, ["datamodelNode", "propertyNode"]);
+        this.setNextStatement(true, ["datamodelNode", "propertyNode"]);
+        this.setColour(230);
+        this.setTooltip("ISA");
+        this.setHelpUrl("");
+    }
+};
+Blockly.Blocks['property_string'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldLabelSerializable("NAME"), "name");
+        this.appendDummyInput()
+            .appendField("String:")
+            .appendField(new Blockly.FieldTextInput("Value"), "value");
+        this.setPreviousStatement(true, ["datamodelNode", "propertyNode"]);
+        this.setNextStatement(true, ["datamodelNode", "propertyNode"]);
+        this.setColour(230);
+        this.setTooltip("ISA");
+        this.setHelpUrl("");
+    }
+};
+
+function childCallbackFactory(id,type){
+    return function () {
+        onNewChild(id,type);
+    };
+}
+function propertyCallbackFactory(id){
+    return function () {
+        onNewProperty(id);
+    };
+}
+
+
+
+/*Blockly.Blocks['property_node'] = {
     init: function() {
         this.appendDummyInput()
             .appendField(new Blockly.FieldLabelSerializable("NAME"), "name");
@@ -100,62 +141,4 @@ Blockly.Blocks['property_node'] = {
         this.setTooltip("ISA");
         this.setHelpUrl("");
     }
-};
-
-/*
-Blockly.Blocks['datamodel_node'] = {
-  init: function() {
-      this.appendDummyInput()
-          .appendField(new Blockly.FieldLabelSerializable(""), "name");
-      this.appendStatementInput("children")
-          .setCheck('datamodel_item');
-      this.appendDummyInput()
-          .appendField("properties:");
-      this.appendStatementInput("properties")
-          .setCheck('taxonomy_item')
-      this.setPreviousStatement(true, "datamodel_item");
-      this.setNextStatement(true, "datamodel_item");
-      this.setColour(330);
-      this.setTooltip("");
-      this.setHelpUrl("");
-
-      this.customContextMenu = function(options) {
-          const NodeId = this.id;
-          const option1 = {};
-          option1.enabled = true; //TODO
-          option1.text = "Add data model Block";
-          option1.callback = this.menuCallbackFactory1(NodeId);
-          options.push(option1);
-          const option2 = {};
-          option2.enabled = true; //TODO
-          option2.text = "Add property";
-          option2.callback = this.menuCallbackFactory2(NodeId);
-          options.push(option2);
-      };
-    },
-    menuCallbackFactory1: function(id){
-        return function () {
-            onNewDatamodelDataTreeEntry(id);
-        };
-    },
-    menuCallbackFactory2: function(id){
-        return function () {
-            onNewProperty(id);
-        };
-    }
-};
-Blockly.Blocks['datamodel_node_ref'] = {
-  init: function() {
-    this.appendDummyInput()
-        .appendField(new Blockly.FieldLabelSerializable(""), "name");
-    this.appendStatementInput("properties:")
-        .setCheck("taxonomy_item")
-        .appendField("properties");
-    this.appendStatementInput("children")
-        .setCheck("datamodel_item")
-        .appendField("children:");
-    this.setColour(330);
- this.setTooltip("");
- this.setHelpUrl("");
-  }
 };*/

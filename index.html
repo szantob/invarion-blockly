@@ -8,11 +8,12 @@
     <script src="js/lib/Blockly/blocks_compressed.js"></script>
     <script src="js/lib/Blockly/msg/js/en.js"></script>
     <script src="js/lib/BlocklyDOM/BlocklyDOM.js"></script>
+    <script src="js/lib/abcHashTable/abcHashTable.js"></script>
     <script src="js/doll/blocks.js"></script>
     <script src="js/doll/toolbox.js"></script>
-    <script src="js/doll/generator.js"></script>
-    <script src="js/model/vocabulary.js"></script>
-    <script src="js/model/workspace.js"></script>
+    <script src="js/model/Vocabulary.js"></script>
+    <script src="js/model/ConceptModel.js"></script>
+    <script src="js/model/CheckerGenerator.js"></script>
     <script src="js/main.js"></script>
     <style src="css/style.css"></style>
 </head>
@@ -24,10 +25,7 @@
 	</nav>
 	<div id="blocklyDiv" style="height: 720px; width: 1280px;"></div>
 
-	<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
-		<category name="Concept Model Blocks">
-		</category>
-	</xml>
+	<xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none"><category name=""></category></xml>
 	<xml xmlns="https://developers.google.com/blockly/xml" id="workspaceBlocks" style="display: none"></xml>
 
 	<script>
