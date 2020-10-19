@@ -213,12 +213,12 @@ class BlockDOM 		extends abstractDOMObject{
 	}
 
 	getValueBlock(valueName){
-		const value = this.getValue();
-		if(value === null) return null;
-		return value.getBlock();
+		const values = this.getValues(valueName);
+		if(values.length !== 1) return null;
+		return values[0].getBlock();
 	}
-	setValueBlock(block){
-		const value = ValueDOM.create();
+	setValueBlock(valueName,block){
+		const value = ValueDOM.create(valueName);
 		value.setBlock(block);
 		this.addValue(value);
 	}/*
@@ -300,6 +300,8 @@ class CommentDOM 	extends abstractDOMObject{
 	}
 }
 class ValueDOM 		extends abstractDOMObject{
+	defaultXml = '<value name=" "> </value>';
+
 	getName	= getStringAttributeFunctionFactory(this,"name");
 	setName = setStringAttributeFunctionFactory(this,"name");
 
@@ -344,6 +346,7 @@ class StatementDOM 	extends abstractDOMObject{
 		let pointerBlock = this.getBlock();
 		for(let i = 1; i < blockList.length; i++){
 			pointerBlock.setNextBlock(blockList[i])
+			pointerBlock = blockList[i];
 		}
 	}
 

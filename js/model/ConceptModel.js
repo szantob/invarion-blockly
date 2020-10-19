@@ -22,11 +22,14 @@ class Workspace{
         const block = this.wsDOM.getBlockById(id);
         if(block === null) return null;
         switch (block.getType()) {
-            case "taxonomy_node":{
+            case 'taxonomy_node':{
                 return new TaxonomyNode(block);
             }
-            case "datamodel_node":{
+            case 'datamodel_node':{
                 return new DataModelNode(block);
+            }
+            case 'property_node':{
+                return new PropertyNode(block);
             }
             default:
                 throw "Ezt meg elfelejtetted ;)"
@@ -183,6 +186,9 @@ class AbstractNode{
         this.dom = DOMObject;
     }
     getName(){}
+    getId(){
+        return this.dom.getFieldText('id');
+    }
     getParent(){
         const parentDOM = this.dom.getParentBlock();
         if(parentDOM === null) return null;
@@ -291,17 +297,37 @@ class TaxonomyNode extends AbstractNode{
 }
 class PropertyNode extends AbstractNode{
     getName = getFieldTextFactory(this,"name");
-    getType(){
-        return this.type;
+
+    getContent(){
+        const valueBlock = this.dom.getValueBlock("value");
+        if(valueBlock === null) return null;
+        const type = valueBlock.getType().split("_")[1];
+        switch (type) {
+            case("string"):{
+                const value = valueBlock.getFieldText("value");
+                return {type:"String",value:value};
+            }
+            case("reference"):{
+                const value = valueBlock.getFieldText("value");
+                return {type:"Reference",value:value};
+            }
+            case("regex"):{
+                const value = valueBlock.getFieldText("value");
+                return {type:"RegularExpression",value:value};
+            }
+            default:
+                throw "Ezt meg elfelejtetted ;)"
+        }
+    }
+    setContent(type){
+        const block = BlockDOM.create(type);
+        this.dom.setValueBlock("value",block);
     }
 
-
-
-    static create(name,type){
-        const block = BlockDOM.create("property_" + type.toLowerCase());
+    static create(name){
+        const block = BlockDOM.create("property_node");
         block.setFieldText("name",name);
         const node = new PropertyNode(block);
-        node.type = type;
         return node;
     }
 }
@@ -332,6 +358,29 @@ function getChildByTypeFactory(parent, type, objectClass){
         return children;
     }
 }
+function getPropertiesFactory(parent){
+    return function () {
+        let childrenStatement = parent.dom.getStatementByName("children");
+        if(childrenStatement === null){
+            return [];
+        }
+        const children = [];
+        const childrenDOM = childrenStatement.toBlockList();
+        for(let i = 0; i < childrenDOM.length; i++){
+            const propertyTypes = ['string','reference'];
+            const ctype = childrenDOM[i].getType().split("_");
+            if((ctype.length === 2)&&(ctype[0] === "property")){
+                if(propertyTypes.includes(ctype[1])){
+                    console.log(ctype);
+                    const node = new PropertyNode(childrenDOM[i]);
+                    node.setType(ctype[1]);
+                    children.push(node);
+                }
+            }
+        }
+        return children;
+    }
+}
 function addChildFactory(parent){ //TODO TYPE CHECK?
     return function(node){
         let childrenStatement = parent.dom.getStatementByName("children");
@@ -353,7 +402,9 @@ function removeChildFactory(parent){ //TODO TYPE CHECK?
         }
         const childrenArray = childrenStatement.toBlockList();
         const newArray = [];
+        console.log(node.dom.toXml());
         for(let i = 0; i < childrenArray.length; i++){
+            console.log(childrenArray[i].toXml());
             if(childrenArray[i] !== node.dom){
                 newArray.push(childrenArray[i]);
             }

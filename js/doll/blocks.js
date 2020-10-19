@@ -45,7 +45,7 @@ Blockly.Blocks['taxonomy_node'] = {
         this.setPreviousStatement(true, ["taxonomyNode", "propertyNode"]);
         this.setNextStatement(true, ["taxonomyNode", "propertyNode"]);
         this.setColour(120);
-        this.setTooltip("");    //TODO
+        this.setTooltip("Taxonomy node");    //TODO
         this.setHelpUrl("");    //TODO
         this.customContextMenu = function(options) {
             const NodeId = this.id;
@@ -64,7 +64,7 @@ Blockly.Blocks['datamodel_node'] = {
         this.setPreviousStatement(true, ["datamodelNode", "propertyNode"]);
         this.setNextStatement(true, ["datamodelNode", "propertyNode"]);
         this.setColour(230);
-        this.setTooltip("");
+        this.setTooltip("Data Model node");
         this.setHelpUrl("");
 
         this.customContextMenu = function(options) {
@@ -74,31 +74,53 @@ Blockly.Blocks['datamodel_node'] = {
         };
     }
 };
-Blockly.Blocks['property_reference'] = {
+Blockly.Blocks['property_node'] = {
     init: function() {
         this.appendDummyInput()
             .appendField(new Blockly.FieldLabelSerializable("NAME"), "name");
-        this.appendDummyInput()
-            .appendField("Reference:")
-            .appendField(new Blockly.FieldTextInput("Value"), "value");
-        this.setPreviousStatement(true, ["datamodelNode", "propertyNode"]);
-        this.setNextStatement(true, ["datamodelNode", "propertyNode"]);
+        this.appendValueInput("value")
+            .setCheck(null);
+        this.setInputsInline(true);
+        this.setPreviousStatement(true, null);
+        this.setNextStatement(true, null);
         this.setColour(230);
-        this.setTooltip("ISA");
+        this.setTooltip("Property node");
+        this.setHelpUrl("");
+        this.customContextMenu = function(options) {
+            const NodeId = this.id;
+            options.push({enabled:true,text:"Set String",           callback:setPropertyValue(NodeId,'value_string')});
+            options.push({enabled:true,text:"Set Reference",        callback:setPropertyValue(NodeId,'value_reference')});
+            options.push({enabled:true,text:"Set RegularExpression",callback:setPropertyValue(NodeId,'value_regex')});
+        };
+    }
+};
+Blockly.Blocks['value_string'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldTextInput("String"), "value");
+        this.setOutput(true, null);
+        this.setColour(230);
+        this.setTooltip("String value");
         this.setHelpUrl("");
     }
 };
-Blockly.Blocks['property_string'] = {
+Blockly.Blocks['value_reference'] = {
     init: function() {
         this.appendDummyInput()
-            .appendField(new Blockly.FieldLabelSerializable("NAME"), "name");
-        this.appendDummyInput()
-            .appendField("String:")
-            .appendField(new Blockly.FieldTextInput("Value"), "value");
-        this.setPreviousStatement(true, ["datamodelNode", "propertyNode"]);
-        this.setNextStatement(true, ["datamodelNode", "propertyNode"]);
+            .appendField(new Blockly.FieldTextInput("Reference"), "value");
+        this.setOutput(true, null);
         this.setColour(230);
-        this.setTooltip("ISA");
+        this.setTooltip("Reference");
+        this.setHelpUrl("");
+    }
+};
+Blockly.Blocks['value_regex'] = {
+    init: function() {
+        this.appendDummyInput()
+            .appendField(new Blockly.FieldTextInput("RegularExpression"), "value");
+        this.setOutput(true, null);
+        this.setColour(230);
+        this.setTooltip("RegularExpression");
         this.setHelpUrl("");
     }
 };
@@ -113,32 +135,8 @@ function propertyCallbackFactory(id){
         onNewProperty(id);
     };
 }
-
-
-
-/*Blockly.Blocks['property_node'] = {
-    init: function() {
-        this.appendDummyInput()
-            .appendField(new Blockly.FieldLabelSerializable("NAME"), "name");
-        this.appendDummyInput()
-            .appendField("type:")
-            .appendField(new Blockly.FieldDropdown([["String","string"], ["Reference","reference"], ["Integer","integer"], ["Date","date"], ["Float","float"], ["RegularExpression","regex"], ["Record","record"]]), "type");
-        this.appendDummyInput()
-            .appendField("value:")
-            .appendField(new Blockly.FieldTextInput("Value"), "value");
-        this.appendDummyInput()
-            .appendField("unit:")
-            .appendField(new Blockly.FieldTextInput("Unit"), "unit");
-        this.appendDummyInput()
-            .appendField("range:")
-            .appendField(new Blockly.FieldTextInput("Range"), "range");
-        this.appendDummyInput()
-            .appendField("enum:")
-            .appendField(new Blockly.FieldTextInput("Enum"), "enum");
-        this.setPreviousStatement(true, null);
-        this.setNextStatement(true, null);
-        this.setColour(230);
-        this.setTooltip("ISA");
-        this.setHelpUrl("");
-    }
-};*/
+function setPropertyValue(id,type) {
+    return function () {
+        onSetProperty(id,type);
+    };
+}

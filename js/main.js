@@ -32,13 +32,34 @@ function onInit(){
 function onNewTaxonomyEntry(){
     Taxonomy.load();
     const itemName = prompt("New taxonomy entry name:", "Thing");
-
     if(!Checker.checkNameValidity(itemName))            return;
+
+    const itemArray = itemName.split(".");
+    if(itemArray.length > 1) {
+        onNewItemRoute(itemArray);
+        return;
+    }
+
     if(!Checker.checkNewTaxonomyEntry(itemName))        return;
     if(!Checker.checkOrCreateVocaularyEntry(itemName))  return;
 
     Taxonomy.addRoot(itemName);
     Taxonomy.commit();
+}
+function onNewItemRoute(itemArray) { //TODO CHECKING
+    Taxonomy.load();
+    Taxonomy.addRoot(itemArray[0]);
+
+    let pointerBlock = Taxonomy.getNodeByName(itemArray[0]);
+    buildTaxonomyTreeFromList(itemArray.slice(1),pointerBlock);
+    Taxonomy.commit();
+}
+function buildTaxonomyTreeFromList(itemList,pointerBlock){
+    for(let i = 0; i <itemList.length; i++){
+        const newNode = TaxonomyNode.create(itemList[i]);
+        pointerBlock.addChild(newNode);
+        pointerBlock = newNode;
+    }
 }
 function onNewDatamodelEntry() {
     DataModel.load();
@@ -60,7 +81,7 @@ function onNewProperty(nodeId){
     if(!Checker.checkExistingTaxonomyEntry(itemName))   return;
     if(!Checker.checkOrCreateVocaularyEntry(itemName))  return;
 
-    const newNode = PropertyNode.create(itemName,'String');
+    const newNode = PropertyNode.create(itemName,'Node');
     Workspace.getNodeById(nodeId).addChild(newNode);
     Workspace.commit();
 }
@@ -69,6 +90,12 @@ function onNewChild(nodeId,type){
     const itemName = prompt("New data model entry name:", "Thing");
 
     if(!Checker.checkNameValidity(itemName))            return;
+    const itemArray = itemName.split(".");
+    if(itemArray.length > 1) {
+        onNewChildTree(itemArray,nodeId,type);
+        return;
+    }
+
 
     let node;
     switch (type) {
@@ -87,6 +114,27 @@ function onNewChild(nodeId,type){
     }
 
     Workspace.getNodeById(nodeId).addChild(node);
+    Workspace.commit();
+}
+function onNewChildTree(itemArray,nodeId,type) {
+    Workspace.load();
+    let pointerNode = Workspace.getNodeById(nodeId);
+    switch (type) {
+        case('taxonomy_node'):{
+            buildTaxonomyTreeFromList(itemArray,pointerNode);
+            break;
+        }
+        case('datamodel_node'):{
+
+        }
+        default:
+            throw "Ezt meg elfelejtetted ;)"
+    }
+    Workspace.commit();
+}
+function onSetProperty(nodeId,type) {
+    Workspace.load();
+    Workspace.getNodeById(nodeId).setContent(type);
     Workspace.commit();
 }
 

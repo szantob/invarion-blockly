@@ -98,7 +98,7 @@ class Generator{
         const datamodelLineArray = [];
         datamodelLineArray.push("datamodel:{\n");
 
-        const datamodelRoots = Taxonomy.getRoots();
+        const datamodelRoots = DataModel.getRoots();
         for(let i = 0; i < datamodelRoots.length; i++){
             datamodelGeneratorDFS(datamodelLineArray,datamodelRoots[i],1);
         }
@@ -116,8 +116,12 @@ function taxonomyGeneratorDFS(lineArray, taxonomyNode, layer){
     lineArray.push(tabs + taxonomyNode.getName() + ": {\n");
 
     const nodeProperties = taxonomyNode.getProperties();
-    for (let i = 0; i < nodeProperties.length; i++){
-        propertyGenerator(lineArray, nodeProperties[i], layer+1);
+    if(nodeProperties.length > 0){
+        lineArray.push(tabs + "\tproperty:{\n");
+        for (let i = 0; i < nodeProperties.length; i++){
+            propertyGenerator(lineArray, nodeProperties[i], layer+2);
+        }
+        lineArray.push(tabs + "\t}\n");
     }
     const nodeChildren = taxonomyNode.getChildren();
     for (let i = 0; i < nodeChildren.length; i++){
@@ -132,11 +136,15 @@ function datamodelGeneratorDFS(lineArray, datamodelNode, layer){
     const fqName = Checker.checkForFullyQualifiedName(name);
 
     lineArray.push(tabs + datamodelNode.getName() + ": {\n");
-    lineArray.push(tabs + "\tISA:" + fqName + "\n");
+    lineArray.push(tabs + "\tisa:" + fqName + "\n");
 
     const nodeProperties = datamodelNode.getProperties();
-    for (let i = 0; i < nodeProperties.length; i++){
-        propertyGenerator(lineArray, nodeProperties[i], layer+1);
+    if(nodeProperties.length > 0){
+        lineArray.push(tabs + "\tproperty:{\n");
+        for (let i = 0; i < nodeProperties.length; i++){
+            propertyGenerator(lineArray, nodeProperties[i], layer+2);
+        }
+        lineArray.push(tabs + "\t}\n");
     }
     const nodeChildren = datamodelNode.getChildren();
     for (let i = 0; i < nodeChildren.length; i++){
@@ -149,15 +157,28 @@ function propertyGenerator(lineArray, propertyNode, layer){
     const tabs = "\t".repeat(layer);
     const name = propertyNode.getName();
     const fqName = Checker.checkForFullyQualifiedName(name);
-    const type = propertyNode.getType();
-    /*const value = propertyNode.getValue();
-    const unit = propertyNode.getUnit();
-    const range = propertyNode.getRange();
-    const enumv = propertyNode.getEnum();*/
+
+    const content = propertyNode.getContent();
 
     lineArray.push(tabs + name + ":{\n");
-    lineArray.push(tabs + "\t ISA:" + fqName + "\n");
-    lineArray.push(tabs + "\t type:" + type + "\n");
+    lineArray.push(tabs + "\t isa:" + fqName + "\n");
+    lineArray.push(tabs + "\t type:" + content.type + "\n");
+    switch (content.type) {
+        case("String"):{
+            lineArray.push(tabs + "\t value:" + content.value + "\n");
+            break;
+        }
+        case("Reference"):{
+            lineArray.push(tabs + "\t value:" + content.value + "\n");
+            break;
+        }
+        case("RegularExpression"):{
+            lineArray.push(tabs + "\t value:" + content.value + "\n");
+            break;
+        }
+        default:
+            throw content.type + " Ezt meg elfelejtetted ;)"
+    }
     lineArray.push(tabs + "}\n");
 }
 
