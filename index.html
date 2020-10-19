@@ -5,19 +5,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" href="./css/style.css">
-
-  <script src="./js/blockly/blockly_compressed.js"></script>
-  <script src="./js/blockly/blocks_compressed.js"></script>
-  <script src="./js/blockly/msg/js/en.js"></script>
-  <script src="./js/doll/blocks.js"></script>
-  <script src="./js/doll/dollBlockly.js"></script>
-  <script src="./js/doll/DollModelChecker.js"></script>
-  <script src="./js/doll/DollModelCallbacks.js"></script>
-  <script src="./js/doll/DollModel.js"></script>
-  <script src="./js/doll/toolbox.js"></script>
-  <script src="./js/lib/BlocklyDOM.js"></script>
-  <script src="./js/lib/DollDOM.js"></script>
-  <script src="./js/main.js"></script>
+  <script src="js/lib/Blockly/blockly_compressed.js"></script>
+  <script src="js/lib/Blockly/blocks_compressed.js"></script>
+  <script src="js/lib/Blockly/msg/js/en.js"></script>
+  <script src="js/lib/BlocklyDOM/BlocklyDOM.js"></script>
+  <script src="js/lib/abcHashTable/abcHashTable.js"></script>
+  <script src="js/doll/blocks.js"></script>
+  <script src="js/doll/toolbox.js"></script>
+  <script src="js/model/Vocabulary.js"></script>
+  <script src="js/model/ConceptModel.js"></script>
+  <script src="js/model/CheckerGenerator.js"></script>
+  <script src="js/main.js"></script>
+  <style src="css/style.css"></style>
 </head>
 <body>
 <nav class="navbar">
@@ -56,9 +55,8 @@
 </nav>
 <main class="row" id="blocklyArea">
   <div id="blocklyDiv" style="height: 650px; width: 1280px;">
-    <xml id="toolbox" style="display: none">
-      <category name="Concept Model Blocks"></category>
-    </xml>
+    <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none"><category name=""></category></xml>
+    <xml xmlns="https://developers.google.com/blockly/xml" id="workspaceBlocks" style="display: none"></xml>
   </div>
 </main>
 
